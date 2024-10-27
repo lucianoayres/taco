@@ -4,7 +4,7 @@
 
 ## Roll up all your text files from directories into one simple text file!
 
-[What's Taco? 🌮](#whats-taco-) • [Why Taco? 🤔](#why-taco-) • [Features ✨](#features-) • [Project Structure 📁](#project-structure-) • [Getting Started 🚀](#getting-started-) • [How to Use Taco 🌮](#how-to-use-taco-) • [Pro Tips 💡](#pro-tips-) [Makefile Commands 🛠️](#makefile-commands-) • [Examples 📚](#examples-) • [Limitations ⚠️](#limitations-) • [Contributions 🍽️](#contributions-) • [License 📄](#license-)
+[What's Taco? 🌮](#whats-taco-) · [Why Taco? 🤔](#why-taco-) · [Features ✨](#features-) · [Project Structure 📁](#project-structure-) · [Getting Started 🚀](#getting-started-) · [How to Use Taco 🌮](#how-to-use-taco-) · [Pro Tips 💡](#pro-tips-) [Makefile Commands 🛠️](#makefile-commands-) · [Examples 📚](#examples-) · [Limitations ⚠️](#limitations-) · [Contributions 🍽️](#contributions-) · [License 📄](#license-)
 
 ## What's Taco? 🌮
 
