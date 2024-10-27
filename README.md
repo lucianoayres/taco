@@ -2,7 +2,7 @@
 
 ![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/banner_taco.png?raw=true)
 
-## Total Assembly and Concatenation Operator
+## Roll up all your text files from directories into one simple text file!
 
 Welcome to **Taco**, the tool that rolls up all your text files into one deliciously satisfying file. Think of it as a burrito, but for your files! Whether you need to combine your notes, code snippets, or any other text, Taco is here to help with all your concatenation cravings.
 
@@ -10,16 +10,22 @@ Welcome to **Taco**, the tool that rolls up all your text files into one delicio
 
 Because who doesn’t love tacos? But seriously, organizing files can be a mess. With Taco, you can:
 
--   Concatenate all text files in a directory into one file.
--   Append files to your output without overwriting, because nobody likes to lose their work.
+-   🌮 **Concatenate all text files** in a directory and its subdirectories into one file.
+-   📂 **Recursively process subdirectories** to collect all your text files.
+-   🚀 **Display processing status** for each file in a concise and informative way.
+-   ✨ **Optional arguments** for directories and output file name.
+-   🔄 **Append mode** to avoid accidental overwrites.
 
 Taco is simple, light, and ready to roll—just like a taco!
 
 ## Features
 
--   🌮 **Concatenate all text files** in the current directory.
--   ✨ **Optional Arguments** for directories and output file name.
--   🔄 **Append Mode** to avoid accidental overwrites.
+-   🌮 **Concatenate all text files** in the specified directories and their subdirectories.
+-   📂 **Recursive traversal** of directories to include all nested text files.
+-   🚫 **Exclusion of binary and hidden files** to keep your output clean.
+-   🔄 **Append mode** ensures your output file grows only when you want it to.
+-   📝 **Informative status messages** that display processing progress.
+-   📁 **Reports directories with no text files** so you're always in the know.
 
 ## Project Structure
 
@@ -108,9 +114,9 @@ This will build the executable and move it to `/usr/local/bin/`.
 
 ## How to Use Taco 🌮
 
-### Default Use (In Current Directory)
+### Default Use (In Current Directory and Subdirectories)
 
-Just run **Taco** without any arguments, and it will concatenate all the **text files** in the directory where the command is executed (excluding hidden files, binary files, and itself):
+Just run **Taco** without any arguments, and it will recursively concatenate all the **text files** in the directory where the command is executed (excluding hidden files, binary files, and itself):
 
 ```bash
 taco
@@ -119,13 +125,17 @@ taco
 This will create (or append to) a file called `taco.txt`, which will contain:
 
 ```
-// Filename: example.txt
+// File: README.md
 
-<Contents of example.txt>
+<Contents of README.md>
 
-// Filename: notes.md
+// File: src/main.go
 
-<Contents of notes.md>
+<Contents of main.go>
+
+// File: docs/setup/guide.txt
+
+<Contents of guide.txt>
 ```
 
 ### Custom Output File
@@ -140,7 +150,7 @@ Now everything goes into `my-taco.txt`, all wrapped up like a taco filled with d
 
 ### Custom Directories
 
-You can also tell Taco which directories to collect files from. Taco will process the **text files directly in those directories** (not in subdirectories), and it will exclude hidden and binary files.
+You can also tell Taco which directories to collect files from. Taco will recursively process the **text files in those directories and all their subdirectories**, excluding hidden and binary files.
 
 ```bash
 taco /path/to/dir1 /path/to/dir2
@@ -149,7 +159,7 @@ taco /path/to/dir1 /path/to/dir2
 Or combine it with a custom output:
 
 ```bash
-taco -output my-taco.txt /path/to/dir1 /path/to/dir2
+taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 ```
 
 ### Skipping Files You Don’t Want
@@ -158,16 +168,32 @@ Taco automatically skips:
 
 -   The script itself (because no taco should eat itself).
 -   The output file (so it doesn’t end up eating its own leftovers).
--   **Hidden files and directories**.
+-   **Hidden files and directories** (those starting with a dot `.`).
 -   **Binary files** (like images, executables, etc.).
--   **Files in subdirectories** (only processes files in the specified directories).
+
+### Status Messages
+
+As Taco processes your files, it provides informative status messages:
+
+```bash
+Processing LICENSE ... Done
+Processing README.md ... Done
+Processing src/main.go ... Done
+No text files found in docs/empty_folder
+Files concatenated successfully into taco.txt
+```
+
+-   **Processing [file] ... Done**: Indicates that a file has been processed successfully.
+-   **No text files found in [directory]**: Informs you when a directory (or subdirectory) contains no text files.
 
 ## Pro Tips
 
+-   **Recursive Processing**: Taco automatically traverses all subdirectories to find text files.
 -   **Only Text Files**: Taco includes only text files in the concatenation. It automatically detects text files based on their content, so no need to worry about file extensions.
--   **Hidden Files and Directories**: Hidden files and directories (those starting with a dot `.` like `.git`) are skipped to keep things clean.
--   **Multiple Directories?** Just specify them all in the command, and Taco will grab text files from all specified directories.
+-   **Hidden Files and Directories**: Files and directories starting with a dot `.` are considered hidden and are skipped.
+-   **Multiple Directories?** Just specify them all in the command, and Taco will grab text files from all specified directories and their subdirectories.
 -   **Appending?** Run the same command multiple times, and Taco won’t overwrite your carefully crafted file—it’ll just keep adding to it like a buffet plate!
+-   **Check for Empty Directories**: Taco informs you about directories without text files, so you can keep your folders tidy.
 
 ## Makefile Commands
 
@@ -205,13 +231,13 @@ To simplify using Taco, we've provided a **Makefile** with handy commands:
 
 ## Examples
 
-### Concatenate Text Files in Current Directory
+### Concatenate Text Files in Current Directory and Subdirectories
 
 ```bash
 taco
 ```
 
-This command concatenates all text files in the current directory into `taco.txt`.
+This command concatenates all text files in the current directory and its subdirectories into `taco.txt`.
 
 ### Concatenate Text Files with Custom Output Filename
 
@@ -219,7 +245,7 @@ This command concatenates all text files in the current directory into `taco.txt
 taco -output=my-concatenated-files.txt
 ```
 
-All text files in the current directory will be concatenated into `my-concatenated-files.txt`.
+All text files in the current directory and its subdirectories will be concatenated into `my-concatenated-files.txt`.
 
 ### Concatenate Text Files from Multiple Directories
 
@@ -227,13 +253,17 @@ All text files in the current directory will be concatenated into `my-concatenat
 taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 ```
 
-This command concatenates all text files from `/path/to/dir1` and `/path/to/dir2` into `my-taco.txt`.
+This command recursively concatenates all text files from `/path/to/dir1` and `/path/to/dir2` into `my-taco.txt`.
+
+### Exclude Specific Files or Directories
+
+While Taco automatically skips hidden and binary files, if you want to exclude specific files or directories, you can reorganize your folders or temporarily rename files. Future versions may include flags for exclusion.
 
 ## Limitations
 
--   **No Subdirectory Traversal**: Taco processes files only in the specified directories and does not traverse subdirectories.
 -   **Binary Files Excluded**: Binary files (like images, videos, executables) are automatically excluded to prevent unexpected results.
 -   **Hidden Files Skipped**: Files and directories starting with a dot `.` are considered hidden and are skipped.
+-   **No Exclusion Flags**: Currently, there are no flags to exclude specific files or directories from processing.
 
 ## Contributions 🍽️
 
