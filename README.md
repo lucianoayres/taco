@@ -6,7 +6,7 @@
 
 [What's Taco? 🌮](#whats-taco-) • [Why Taco? 🤔](#why-taco-) • [Features ✨](#features-) • [Project Structure 📁](#project-structure-) • [Getting Started 🚀](#getting-started-) • [How to Use Taco 🌮](#how-to-use-taco-) • [Pro Tips 💡](#pro-tips-) [Makefile Commands 🛠️](#makefile-commands-) • [Examples 📚](#examples-) • [Limitations ⚠️](#limitations-) • [Contributions 🍽️](#contributions-) • [License 📄](#license-)
 
-## What's Taco?
+## What's Taco? 🌮
 
 Welcome to **Taco**, the tool that rolls up all your text files into one deliciously satisfying file. Think of it as a burrito, but for your files! Whether you need to combine your notes, code snippets, or any other text, Taco is here to help with all your concatenation cravings.
 
