@@ -2,11 +2,15 @@
 
 ![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/banner_taco.png?raw=true)
 
+## Table of Contents
+
+[Why Taco? 🌮](#why-taco-) • [Features ✨](#features-) • [Project Structure 📁](#project-structure-) • [Getting Started 🚀](#getting-started-) • [How to Use Taco 🌮](#how-to-use-taco-) • [Pro Tips 💡](#pro-tips-) [Makefile Commands 🛠️](#makefile-commands-) • [Examples 📚](#examples-) • [Limitations ⚠️](#limitations-) • [Contributions 🍽️](#contributions-) • [License 📄](#license-)
+
 ## Roll up all your text files from directories into one simple text file!
 
 Welcome to **Taco**, the tool that rolls up all your text files into one deliciously satisfying file. Think of it as a burrito, but for your files! Whether you need to combine your notes, code snippets, or any other text, Taco is here to help with all your concatenation cravings.
 
-## Why Taco?
+## Why Taco? 🌮
 
 Because who doesn’t love tacos? But seriously, organizing files can be a mess. With Taco, you can:
 
@@ -18,7 +22,7 @@ Because who doesn’t love tacos? But seriously, organizing files can be a mess.
 
 Taco is simple, light, and ready to roll—just like a taco!
 
-## Features
+## Features ✨
 
 -   🌮 **Concatenate all text files** in the specified directories and their subdirectories.
 -   📂 **Recursive traversal** of directories to include all nested text files.
@@ -27,7 +31,7 @@ Taco is simple, light, and ready to roll—just like a taco!
 -   📝 **Informative status messages** that display processing progress.
 -   📁 **Reports directories with no text files** so you're always in the know.
 
-## Project Structure
+## Project Structure 📁
 
 Here’s the project structure for Taco:
 
@@ -41,7 +45,7 @@ Here’s the project structure for Taco:
 
 Your main logic for Taco is in the `src/main.go` file, but we will run and build the project from the root directory.
 
-## Getting Started
+## Getting Started 🚀
 
 ### 1. Clone the Repository
 
@@ -186,7 +190,7 @@ Files concatenated successfully into taco.txt
 -   **Processing [file] ... Done**: Indicates that a file has been processed successfully.
 -   **No text files found in [directory]**: Informs you when a directory (or subdirectory) contains no text files.
 
-## Pro Tips
+## Pro Tips 💡
 
 -   **Recursive Processing**: Taco automatically traverses all subdirectories to find text files.
 -   **Only Text Files**: Taco includes only text files in the concatenation. It automatically detects text files based on their content, so no need to worry about file extensions.
@@ -195,7 +199,7 @@ Files concatenated successfully into taco.txt
 -   **Appending?** Run the same command multiple times, and Taco won’t overwrite your carefully crafted file—it’ll just keep adding to it like a buffet plate!
 -   **Check for Empty Directories**: Taco informs you about directories without text files, so you can keep your folders tidy.
 
-## Makefile Commands
+## Makefile Commands 🛠️
 
 To simplify using Taco, we've provided a **Makefile** with handy commands:
 
@@ -229,7 +233,7 @@ To simplify using Taco, we've provided a **Makefile** with handy commands:
     sudo make uninstall
     ```
 
-## Examples
+## Examples 📚
 
 ### Concatenate Text Files in Current Directory and Subdirectories
 
@@ -259,7 +263,7 @@ This command recursively concatenates all text files from `/path/to/dir1` and `/
 
 While Taco automatically skips hidden and binary files, if you want to exclude specific files or directories, you can reorganize your folders or temporarily rename files. Future versions may include flags for exclusion.
 
-## Limitations
+## Limitations ⚠️
 
 -   **Binary Files Excluded**: Binary files (like images, videos, executables) are automatically excluded to prevent unexpected results.
 -   **Hidden Files Skipped**: Files and directories starting with a dot `.` are considered hidden and are skipped.
@@ -269,6 +273,6 @@ While Taco automatically skips hidden and binary files, if you want to exclude s
 
 Found a bug? Have a feature idea? Or maybe you just want to share your love of tacos? Feel free to open an issue or create a pull request on [GitHub](https://github.com/lucianoayres/taco). Let’s make Taco even tastier!
 
-### License
+### License 📄
 
 This project is licensed under the [MIT License](LICENSE). Eat tacos responsibly.
