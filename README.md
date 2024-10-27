@@ -18,7 +18,6 @@ Taco is simple, light, and ready to roll—just like a taco!
 ## Features
 
 -   🌮 **Concatenate all text files** in the current directory.
--   🚫 **Skips hidden files and directories**, binary files, and the output file.
 -   ✨ **Optional Arguments** for directories and output file name.
 -   🔄 **Append Mode** to avoid accidental overwrites.
 
