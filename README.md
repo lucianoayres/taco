@@ -1,6 +1,6 @@
 # 🌮 Taco
 
-![Taco Banner](https://github.com/lucianoayres/taco/blob/main/assets/images/banner_taco.png?raw=true)
+![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/banner_taco.png?raw=true)
 
 ## Total Assembly and Concatenation Operator
 
