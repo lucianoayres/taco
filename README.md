@@ -10,6 +10,8 @@
 
 Taco is a tool designed to make your workflow with large language models (LLMs) easier. Instead of manually copying and pasting individual project files into a prompt, Taco rolls up all your text files into one neat file, so you can focus on what matters. Think of it like a burrito for your files—whether it’s notes, code snippets, or any other text, Taco simplifies the process by creating a single file with everything you need.
 
+![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/demo_taco.gif?raw=true)
+
 ## Why Taco? 🤔
 
 Because manually handling files for LLM prompts can be time-consuming and messy. With Taco, you can:

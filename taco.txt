@@ -1,0 +1,627 @@
+// File: LICENSE
+
+MIT License
+
+Copyright (c) 2024 Luciano Ayres
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+// File: Makefile
+
+# Makefile for the Taco project
+
+# Variables
+SRC_DIR := ./src
+OUTPUT := taco
+INSTALL_DIR := /usr/local/bin
+
+# Default run target (runs the project without any arguments)
+.PHONY: run
+run:
+	go run $(SRC_DIR)
+
+# Run with custom output file
+.PHONY: run-output
+run-output:
+	go run $(SRC_DIR) -output=$(OUTPUT).txt
+
+# Build the project (creates the taco executable)
+.PHONY: build
+build:
+	go build -o $(OUTPUT) $(SRC_DIR)
+
+# Clean the project (removes the taco executable)
+.PHONY: clean
+clean:
+	rm -f $(OUTPUT)
+
+# Run tests (if you add tests in the future)
+.PHONY: test
+test:
+	go test ./...
+
+# Install the taco executable to /usr/local/bin
+.PHONY: install
+install: build
+	sudo install -m 755 $(OUTPUT) $(INSTALL_DIR)
+
+# Uninstall the taco executable from /usr/local/bin
+.PHONY: uninstall
+uninstall:
+	rm -f $(INSTALL_DIR)/$(OUTPUT)
+
+
+// File: README.md
+
+# 🌮 Taco
+
+![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/banner_taco.png?raw=true)
+
+## Roll up all your text files from directories into one simple text file!
+
+[What's Taco? 🌮](#whats-taco-) · [Why Taco? 🤔](#why-taco-) · [Features ✨](#features-) · [Project Structure 📁](#project-structure-) · [Getting Started 🚀](#getting-started-) · [How to Use Taco 🌮](#how-to-use-taco-) · [Pro Tips 💡](#pro-tips-) · [Makefile Commands 🛠️](#makefile-commands-) · [Examples 📚](#examples-) · [Limitations ⚠️](#limitations-) · [Contributions 🍽️](#contributions-) · [License 📄](#license-)
+
+## What's Taco? 🌮
+
+Taco is a tool designed to make your workflow with large language models (LLMs) easier. Instead of manually copying and pasting individual project files into a prompt, Taco rolls up all your text files into one neat file, so you can focus on what matters. Think of it like a burrito for your files—whether it’s notes, code snippets, or any other text, Taco simplifies the process by creating a single file with everything you need.
+
+## Why Taco? 🤔
+
+Because manually handling files for LLM prompts can be time-consuming and messy. With Taco, you can:
+
+-   🌮 **Concatenate all text files** in a directory and its subdirectories into one comprehensive file for easy prompting.
+-   📂 **Recursively process subdirectories**, gathering all your important text files automatically.
+-   🚀 **Display processing status** for each file, giving you clear progress updates.
+-   ✨ **Optional arguments** allow you to specify which directories and file names to use.
+-   🔄 **Append mode** helps you avoid accidental overwrites, so you can keep adding to your project file seamlessly.
+
+Taco is your go-to solution for organizing and prepping files, all with the efficiency of a single command!
+
+## Features ✨
+
+-   🌮 **Concatenate all text files** in the specified directories and their subdirectories to create a unified prompt file.
+-   📂 **Recursive traversal** ensures all nested text files are included.
+-   🚫 **Exclusion of binary and hidden files**, keeping your output lean and clean.
+-   🔄 **Append mode** prevents overwriting, only growing the output file when needed.
+-   📝 **Status messages** that show file-by-file progress.
+-   📁 **Directory reporting** for directories without text files, ensuring no data is missed.
+
+Taco is your go-to solution for organizing and prepping files, all with the efficiency of a single command!
+
+## Project Structure 📁
+
+Here’s the project structure for Taco:
+
+```
+/taco
+├── go.mod       # Go module file
+├── Makefile     # Makefile to simplify commands
+├── src          # Directory containing the source code
+│   └── main.go  # Main Go file
+```
+
+Your main logic for Taco is in the `src/main.go` file, but we will run and build the project from the root directory.
+
+## Getting Started 🚀
+
+### 1. Clone the Repository
+
+First, clone the repository to your local machine:
+
+```bash
+git clone https://github.com/lucianoayres/taco.git
+cd taco
+```
+
+### 2. Initialize the Go Module
+
+If you're cloning the project for the first time, ensure you have Go installed, then run:
+
+```bash
+go mod tidy
+```
+
+This will download any required dependencies.
+
+### 3. Running Taco
+
+To run Taco, you can execute the script directly from the root directory of the project.
+
+#### Option 1: Run Taco from the Root Directory
+
+Simply run:
+
+```bash
+go run ./src
+```
+
+#### Option 2: Use the Makefile
+
+We've provided a Makefile to simplify commands. You can run:
+
+```bash
+make run
+```
+
+### 4. Building Taco
+
+You can also build Taco into an executable. To build the project from the root directory, use this command:
+
+```bash
+go build -o taco ./src
+```
+
+Alternatively, use the Makefile:
+
+```bash
+make build
+```
+
+This will create an executable file called `taco` in the root directory. You can then run the program by executing:
+
+```bash
+./taco
+```
+
+### 5. Installing Taco
+
+To install Taco so you can use it from anywhere, you can move the executable to your local bin directory:
+
+```bash
+sudo make install
+```
+
+This will build the executable and move it to `/usr/local/bin/`.
+
+## How to Use Taco 🌮
+
+### Default Use (In Current Directory and Subdirectories)
+
+Just run **Taco** without any arguments, and it will recursively concatenate all the **text files** in the directory where the command is executed (excluding hidden files, binary files, and itself):
+
+```bash
+taco
+```
+
+This will create (or append to) a file called `taco.txt`, which will contain:
+
+```
+// File: README.md
+
+<Contents of README.md>
+
+// File: src/main.go
+
+<Contents of main.go>
+
+// File: docs/setup/guide.txt
+
+<Contents of guide.txt>
+```
+
+### Custom Output File
+
+Want to save your file mashup to something other than the default `taco.txt`? No problem! Just specify your preferred output file name:
+
+```bash
+taco -output=my-taco.txt
+```
+
+Now everything goes into `my-taco.txt`, all wrapped up like a taco filled with data goodness.
+
+### Custom Directories
+
+You can also tell Taco which directories to collect files from. Taco will recursively process the **text files in those directories and all their subdirectories**, excluding hidden and binary files.
+
+```bash
+taco /path/to/dir1 /path/to/dir2
+```
+
+Or combine it with a custom output:
+
+```bash
+taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
+```
+
+### Skipping Files You Don’t Want
+
+Taco automatically skips:
+
+-   The script itself (because no taco should eat itself).
+-   The output file (so it doesn’t end up eating its own leftovers).
+-   **Hidden files and directories** (those starting with a dot `.`).
+-   **Binary files** (like images, executables, etc.).
+
+### Status Messages
+
+As Taco processes your files, it provides informative status messages:
+
+```bash
+Processing LICENSE ... Done
+Processing README.md ... Done
+Processing src/main.go ... Done
+No text files found in docs/empty_folder
+Files concatenated successfully into taco.txt
+```
+
+-   **Processing [file] ... Done**: Indicates that a file has been processed successfully.
+-   **No text files found in [directory]**: Informs you when a directory (or subdirectory) contains no text files.
+
+## Pro Tips 💡
+
+-   **Recursive Processing**: Taco automatically traverses all subdirectories to find text files.
+-   **Only Text Files**: Taco includes only text files in the concatenation. It automatically detects text files based on their content, so no need to worry about file extensions.
+-   **Hidden Files and Directories**: Files and directories starting with a dot `.` are considered hidden and are skipped.
+-   **Multiple Directories?** Just specify them all in the command, and Taco will grab text files from all specified directories and their subdirectories.
+-   **Appending?** Run the same command multiple times, and Taco won’t overwrite your carefully crafted file—it’ll just keep adding to it like a buffet plate!
+-   **Check for Empty Directories**: Taco informs you about directories without text files, so you can keep your folders tidy.
+
+## Makefile Commands 🛠️
+
+To simplify using Taco, we've provided a **Makefile** with handy commands:
+
+-   **Run Taco**:
+
+    ```bash
+    make run
+    ```
+
+-   **Build Taco**:
+
+    ```bash
+    make build
+    ```
+
+-   **Install Taco**:
+
+    ```bash
+    sudo make install
+    ```
+
+-   **Clean Build Files**:
+
+    ```bash
+    make clean
+    ```
+
+-   **Uninstall Taco**:
+
+    ```bash
+    sudo make uninstall
+    ```
+
+## Examples 📚
+
+### Concatenate Text Files in Current Directory and Subdirectories
+
+```bash
+taco
+```
+
+This command concatenates all text files in the current directory and its subdirectories into `taco.txt`.
+
+### Concatenate Text Files with Custom Output Filename
+
+```bash
+taco -output=my-concatenated-files.txt
+```
+
+All text files in the current directory and its subdirectories will be concatenated into `my-concatenated-files.txt`.
+
+### Concatenate Text Files from Multiple Directories
+
+```bash
+taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
+```
+
+This command recursively concatenates all text files from `/path/to/dir1` and `/path/to/dir2` into `my-taco.txt`.
+
+### Exclude Specific Files or Directories
+
+While Taco automatically skips hidden and binary files, if you want to exclude specific files or directories, you can reorganize your folders or temporarily rename files. Future versions may include flags for exclusion.
+
+## Limitations ⚠️
+
+-   **Binary Files Excluded**: Binary files (like images, videos, executables) are automatically excluded to prevent unexpected results.
+-   **Hidden Files Skipped**: Files and directories starting with a dot `.` are considered hidden and are skipped.
+-   **No Exclusion Flags**: Currently, there are no flags to exclude specific files or directories from processing.
+
+## Contributions 🍽️
+
+Found a bug? Have a feature idea? Or maybe you just want to share your love of tacos? Feel free to open an issue or create a pull request on [GitHub](https://github.com/lucianoayres/taco). Let’s make Taco even tastier!
+
+### License 📄
+
+This project is licensed under the [MIT License](LICENSE). Eat tacos responsibly.
+
+
+// File: go.mod
+
+module github.com/lucianoayres/taco
+
+go 1.23.2
+
+
+// File: src/main.go
+
+package main
+
+import (
+	"flag"
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+const bufferSize = 512 // Number of bytes to read for content detection
+
+var initialWorkingDir string
+
+// parseArguments handles the command-line arguments and returns the output filename and directories to process.
+func parseArguments() (string, []string) {
+	// Define command-line flags
+	outputFileName := flag.String("output", "taco.txt", "The output file where the content will be concatenated")
+	flag.Parse()
+
+	// Collect directories from arguments or default to current directory
+	directories := flag.Args()
+	if len(directories) == 0 {
+		directories = []string{initialWorkingDir}
+	}
+
+	return *outputFileName, directories
+}
+
+// getExcludedPaths returns a map containing full paths to exclude (the script itself and the output file).
+func getExcludedPaths(outputFilePath, scriptFilePath string) map[string]struct{} {
+	excludedPaths := make(map[string]struct{})
+	excludedPaths[scriptFilePath] = struct{}{}
+	excludedPaths[outputFilePath] = struct{}{}
+	return excludedPaths
+}
+
+// concatenateFiles processes the directories and writes the content of each text file to the output file.
+func concatenateFiles(outputFilePath string, directories []string, excludedPaths map[string]struct{}) error {
+	var anyFilesProcessed bool = false
+	var outputFile *os.File
+
+	defer func() {
+		if outputFile != nil {
+			outputFile.Close()
+		}
+	}()
+
+	for _, dir := range directories {
+		filesProcessed, err := processDirectory(dir, &outputFile, outputFilePath, excludedPaths)
+		if err != nil {
+			return fmt.Errorf("error processing directory %s: %v", dir, err)
+		}
+		if !filesProcessed {
+			relativeDir, err := filepath.Rel(initialWorkingDir, dir)
+			if err != nil || relativeDir == "." {
+				relativeDir = dir
+			}
+			fmt.Printf("No text files found in %s\n", relativeDir)
+		} else {
+			anyFilesProcessed = true
+		}
+	}
+
+	if !anyFilesProcessed {
+		fmt.Println("No text files found in any of the directories.")
+	} else {
+		// Compute relative path of the output file for display
+		relativeOutputPath, err := filepath.Rel(initialWorkingDir, outputFilePath)
+		if err != nil {
+			relativeOutputPath = outputFilePath // Fallback to absolute path
+		}
+		fmt.Printf("Files concatenated successfully into %s\n", relativeOutputPath)
+	}
+
+	return nil
+}
+
+// processDirectory recursively reads files in the directory and its subdirectories.
+// It returns a bool indicating whether any text files were processed.
+func processDirectory(dir string, outputFile **os.File, outputFilePath string, excludedPaths map[string]struct{}) (bool, error) {
+	filesProcessed := false
+
+	entries, err := os.ReadDir(dir)
+	if err != nil {
+		return false, fmt.Errorf("error reading directory %s: %v", dir, err)
+	}
+
+	// Track whether any text files were found in subdirectories
+	subdirFilesProcessed := false
+
+	for _, entry := range entries {
+		name := entry.Name()
+		path := filepath.Join(dir, name)
+
+		// Skip hidden files and directories
+		if isHidden(name) {
+			continue
+		}
+
+		// Skip excluded files and directories based on full path
+		if _, excluded := excludedPaths[path]; excluded {
+			continue
+		}
+
+		if entry.IsDir() {
+			// Recursively process subdirectories
+			subdirProcessed, err := processDirectory(path, outputFile, outputFilePath, excludedPaths)
+			if err != nil {
+				return false, err
+			}
+			if !subdirProcessed {
+				relativeDir, err := filepath.Rel(initialWorkingDir, path)
+				if err != nil || relativeDir == "." {
+					relativeDir = path
+				}
+				fmt.Printf("No text files found in %s\n", relativeDir)
+			} else {
+				subdirFilesProcessed = true
+			}
+		} else {
+			// Check if the file is a text file
+			if isTextFile(path) {
+				// Open output file if not already opened
+				if *outputFile == nil {
+					var err error
+					*outputFile, err = os.OpenFile(outputFilePath, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+					if err != nil {
+						return false, fmt.Errorf("error creating/opening output file: %v", err)
+					}
+				}
+
+				// Compute relative path from initial working directory
+				relativePath, err := filepath.Rel(initialWorkingDir, path)
+				if err != nil {
+					relativePath = path // Fallback to full path if cannot compute relative path
+				}
+
+				// Processing status in a single line
+				fmt.Printf("Processing %s ... ", relativePath)
+
+				// Write file content to the output file
+				err = writeFileContent(*outputFile, path, relativePath)
+				if err != nil {
+					fmt.Printf("Error\n")
+					fmt.Printf("Error processing file %s: %v\n", relativePath, err)
+				} else {
+					// Indicate completion on the same line
+					fmt.Printf("Done\n")
+				}
+
+				filesProcessed = true
+			}
+		}
+	}
+
+	// If no files were processed in this directory or its subdirectories
+	if !filesProcessed && !subdirFilesProcessed {
+		return false, nil
+	}
+
+	return true, nil
+}
+
+// writeFileContent reads a file and writes its content to the output file in the specified format.
+func writeFileContent(outputFile *os.File, filePath, relativePath string) error {
+	// Open the file for reading
+	inputFile, err := os.Open(filePath)
+	if err != nil {
+		return fmt.Errorf("error opening file %s: %v", filePath, err)
+	}
+	defer inputFile.Close()
+
+	// Write the file path to the output file
+	if _, err := fmt.Fprintf(outputFile, "// File: %s\n\n", relativePath); err != nil {
+		return fmt.Errorf("error writing file path to output file: %v", err)
+	}
+
+	// Copy the file content to the output file
+	if _, err := io.Copy(outputFile, inputFile); err != nil {
+		return fmt.Errorf("error copying content from %s: %v", filePath, err)
+	}
+
+	// Write two newlines to separate files
+	if _, err := outputFile.WriteString("\n\n"); err != nil {
+		return fmt.Errorf("error writing separator to output file: %v", err)
+	}
+
+	return nil
+}
+
+// isHidden checks if a file or directory is hidden (starts with a dot).
+func isHidden(name string) bool {
+	return strings.HasPrefix(name, ".")
+}
+
+// isTextFile determines if a file is a text file using net/http.DetectContentType.
+func isTextFile(path string) bool {
+	file, err := os.Open(path)
+	if err != nil {
+		// If we can't open it, assume it's not text
+		return false
+	}
+	defer file.Close()
+
+	// Read the first 512 bytes for content detection
+	buffer := make([]byte, bufferSize)
+	n, err := file.Read(buffer)
+	if err != nil && err != io.EOF {
+		return false
+	}
+	buffer = buffer[:n]
+
+	// Handle empty files as text files
+	if n == 0 {
+		return true
+	}
+
+	contentType := http.DetectContentType(buffer)
+	return strings.HasPrefix(contentType, "text/") ||
+		contentType == "application/json" ||
+		contentType == "application/javascript" ||
+		contentType == "application/xml"
+}
+
+func main() {
+	var err error
+	// Get the initial working directory
+	initialWorkingDir, err = os.Getwd()
+	if err != nil {
+		fmt.Println("Error getting current working directory:", err)
+		os.Exit(1)
+	}
+
+	// Get the executable's full path to exclude it from concatenation
+	scriptFilePath, err := os.Executable()
+	if err != nil {
+		fmt.Println("Error getting executable path:", err)
+		os.Exit(1)
+	}
+
+	// Parse command-line arguments
+	outputFileName, directories := parseArguments()
+
+	// Get the absolute path of the output file
+	outputFilePath, err := filepath.Abs(outputFileName)
+	if err != nil {
+		fmt.Println("Error getting absolute path of output file:", err)
+		os.Exit(1)
+	}
+
+	// Get the list of paths to exclude (script and output file)
+	excludedPaths := getExcludedPaths(outputFilePath, scriptFilePath)
+
+	// Concatenate files from the directories
+	if err := concatenateFiles(outputFilePath, directories, excludedPaths); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+
