@@ -8,28 +8,30 @@
 
 ## What's Taco? 🌮
 
-Welcome to **Taco**, the tool that rolls up all your text files into one deliciously satisfying file. Think of it as a burrito, but for your files! Whether you need to combine your notes, code snippets, or any other text, Taco is here to help with all your concatenation cravings.
+Taco is a tool designed to make your workflow with large language models (LLMs) easier. Instead of manually copying and pasting individual project files into a prompt, Taco rolls up all your text files into one neat file, so you can focus on what matters. Think of it like a burrito for your files—whether it’s notes, code snippets, or any other text, Taco simplifies the process by creating a single file with everything you need.
 
 ## Why Taco? 🤔
 
-Because who doesn’t love tacos? But seriously, organizing files can be a mess. With Taco, you can:
+Because manually handling files for LLM prompts can be time-consuming and messy. With Taco, you can:
 
--   🌮 **Concatenate all text files** in a directory and its subdirectories into one file.
--   📂 **Recursively process subdirectories** to collect all your text files.
--   🚀 **Display processing status** for each file in a concise and informative way.
--   ✨ **Optional arguments** for directories and output file name.
--   🔄 **Append mode** to avoid accidental overwrites.
+-   🌮 **Concatenate all text files** in a directory and its subdirectories into one comprehensive file for easy prompting.
+-   📂 **Recursively process subdirectories**, gathering all your important text files automatically.
+-   🚀 **Display processing status** for each file, giving you clear progress updates.
+-   ✨ **Optional arguments** allow you to specify which directories and file names to use.
+-   🔄 **Append mode** helps you avoid accidental overwrites, so you can keep adding to your project file seamlessly.
 
-Taco is simple, light, and ready to roll—just like a taco!
+Taco is your go-to solution for organizing and prepping files, all with the efficiency of a single command!
 
 ## Features ✨
 
--   🌮 **Concatenate all text files** in the specified directories and their subdirectories.
--   📂 **Recursive traversal** of directories to include all nested text files.
--   🚫 **Exclusion of binary and hidden files** to keep your output clean.
--   🔄 **Append mode** ensures your output file grows only when you want it to.
--   📝 **Informative status messages** that display processing progress.
--   📁 **Reports directories with no text files** so you're always in the know.
+-   🌮 **Concatenate all text files** in the specified directories and their subdirectories to create a unified prompt file.
+-   📂 **Recursive traversal** ensures all nested text files are included.
+-   🚫 **Exclusion of binary and hidden files**, keeping your output lean and clean.
+-   🔄 **Append mode** prevents overwriting, only growing the output file when needed.
+-   📝 **Status messages** that show file-by-file progress.
+-   📁 **Directory reporting** for directories without text files, ensuring no data is missed.
+
+Taco is your go-to solution for organizing and prepping files, all with the efficiency of a single command!
 
 ## Project Structure 📁
 
