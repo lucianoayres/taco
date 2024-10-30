@@ -28,7 +28,7 @@ clean:
 # Run tests (if you add tests in the future)
 .PHONY: test
 test:
-	go test ./...
+	go test -v ./...
 
 # Install the taco executable to /usr/local/bin
 .PHONY: install
