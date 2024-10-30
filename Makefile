@@ -4,6 +4,8 @@
 SRC_DIR := ./src
 OUTPUT := taco
 INSTALL_DIR := /usr/local/bin
+COVERAGE_OUT := coverage.out
+COVERAGE_HTML := coverage.html
 
 # Default run target (runs the project without any arguments)
 .PHONY: run
@@ -20,15 +22,27 @@ run-output:
 build:
 	go build -o $(OUTPUT) $(SRC_DIR)
 
-# Clean the project (removes the taco executable)
+# Clean the project (removes the taco executable and coverage files)
 .PHONY: clean
 clean:
-	rm -f $(OUTPUT)
+	rm -f $(OUTPUT) $(COVERAGE_OUT) $(COVERAGE_HTML)
 
-# Run tests (if you add tests in the future)
+# Run tests
 .PHONY: test
 test:
 	go test -v ./...
+
+# Run tests with coverage report
+.PHONY: test-coverage
+test-coverage:
+	go test -coverprofile=$(COVERAGE_OUT) ./...
+	go tool cover -func=$(COVERAGE_OUT)
+
+# Generate HTML coverage report
+.PHONY: coverage-html
+coverage-html: test-coverage
+	go tool cover -html=$(COVERAGE_OUT) -o $(COVERAGE_HTML)
+	@echo "Coverage report generated at $(COVERAGE_HTML)"
 
 # Install the taco executable to /usr/local/bin
 .PHONY: install

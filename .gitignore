@@ -4,6 +4,9 @@
 /taco.dms
 /taco.out
 
+# Coverage report file
+/coverage.html
+
 # Merged text files
 /taco.txt
 
