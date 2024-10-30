@@ -52,26 +52,110 @@ Your main logic for Taco is in the `src/main.go` file, but we will run and build
 
 ## Getting Started 🚀
 
-### 1. Clone the Repository
+### Installation Options
 
-First, clone the repository to your local machine:
+You have two options to install Taco:
 
-```bash
-git clone https://github.com/lucianoayres/taco.git
-cd taco
-```
+#### **Option 1: Download Pre-built Binary (Linux Only)**
 
-### 2. Initialize the Go Module
+If you prefer not to build Taco from source, you can download the pre-built binary for Linux:
 
-Ensure you have Go installed, then run:
+1. **Navigate to the Releases Page:**
 
-```bash
-go mod tidy
-```
+    Visit the [Taco Releases](https://github.com/lucianoayres/taco/releases) page on GitHub.
 
-This will download any required dependencies.
+2. **Download the Latest Release:**
 
-### 3. Running Taco
+    Find the latest release and download the Linux binary (`taco`).
+
+3. **Make the Binary Executable:**
+
+    After downloading, make the binary executable:
+
+    ```bash
+    chmod +x taco
+    ```
+
+4. **Move the Binary to Your Local Bin Directory:**
+
+    To use Taco from anywhere, move it to `/usr/local/bin/`:
+
+    ```bash
+    sudo mv taco /usr/local/bin/
+    ```
+
+    Now, you can run Taco by simply typing:
+
+    ```bash
+    taco
+    ```
+
+    **Note:** The pre-built binary is **Linux-only**. Ensure you're using a Linux environment to utilize the downloaded binary.
+
+#### **Option 2: Build from Source**
+
+If you prefer to build Taco from source, follow these steps:
+
+1. **Clone the Repository:**
+
+    ```bash
+    git clone https://github.com/lucianoayres/taco.git
+    cd taco
+    ```
+
+2. **Initialize the Go Module:**
+
+    Ensure you have Go installed, then run:
+
+    ```bash
+    go mod tidy
+    ```
+
+    This will download any required dependencies.
+
+3. **Build Taco:**
+
+    You can build Taco into an executable using the Makefile or directly with `go build`.
+
+    - **Using Makefile:**
+
+        ```bash
+        make build
+        ```
+
+        This will create an executable file called `taco` in the root directory.
+
+    - **Using `go build`:**
+
+        ```bash
+        go build -o taco ./src
+        ```
+
+        This also creates the `taco` executable in the root directory.
+
+4. **Install Taco:**
+
+    To install Taco so you can use it from anywhere, move the executable to your local bin directory:
+
+    ```bash
+    sudo make install
+    ```
+
+    This will build the executable and move it to `/usr/local/bin/`.
+
+    Alternatively, if you built it manually:
+
+    ```bash
+    sudo mv taco /usr/local/bin/
+    ```
+
+    Now, you can run the program by executing:
+
+    ```bash
+    taco
+    ```
+
+### Running Taco
 
 To run Taco, you can execute the script directly from the root directory of the project.
 
@@ -91,7 +175,7 @@ Use the provided Makefile to simplify commands:
 make run
 ```
 
-### 4. Building Taco
+### Building Taco
 
 You can build Taco into an executable. To build the project from the root directory, use:
 
@@ -111,7 +195,7 @@ This will create an executable file called `taco` in the root directory. You can
 ./taco
 ```
 
-### 5. Installing Taco
+### Installing Taco
 
 To install Taco so you can use it from anywhere, move the executable to your local bin directory:
 
@@ -134,15 +218,15 @@ taco
 This will create (or append to) a file called `taco.txt`, which will contain:
 
 ```
-// File: README.md
+# File: README.md
 
 <Contents of README.md>
 
-// File: src/main.go
+# File: src/main.go
 
 <Contents of main.go>
 
-// File: docs/setup/guide.txt
+# File: docs/setup/guide.txt
 
 <Contents of guide.txt>
 ```
@@ -236,6 +320,24 @@ Simplify using Taco with the **Makefile** commands:
 
     ```bash
     sudo make uninstall
+    ```
+
+-   **Run Tests**:
+
+    ```bash
+    make test
+    ```
+
+-   **Run Tests with Coverage**:
+
+    ```bash
+    make test-coverage
+    ```
+
+-   **Generate HTML Coverage Report**:
+
+    ```bash
+    make coverage-html
     ```
 
 ## Examples 📚
