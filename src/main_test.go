@@ -17,7 +17,7 @@ func createTestFiles(t *testing.T, baseDir string, files map[string]string) {
 		if err := os.MkdirAll(dir, 0755); err != nil {
 			t.Fatalf("Failed to create directory %s: %v", dir, err)
 		}
-		if err := ioutil.WriteFile(fullPath, []byte(content), 0644); err != nil {
+		if err := os.WriteFile(fullPath, []byte(content), 0644); err != nil {
 			t.Fatalf("Failed to write file %s: %v", fullPath, err)
 		}
 	}
@@ -114,7 +114,7 @@ func TestIsHidden(t *testing.T) {
 
 // Test for isTextFile function
 func TestIsTextFile(t *testing.T) {
-	tempDir, err := ioutil.TempDir("", "taco_test")
+	tempDir, err := os.MkdirTemp("", "taco_test")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -148,7 +148,7 @@ func TestIsTextFile(t *testing.T) {
 
 // Test for writeFileContent function
 func TestWriteFileContent(t *testing.T) {
-	tempDir, err := ioutil.TempDir("", "taco_test")
+	tempDir, err := os.MkdirTemp("", "taco_test")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -185,7 +185,7 @@ func TestWriteFileContent(t *testing.T) {
 
 func TestWriteFileContent_InputFileError(t *testing.T) {
 	// Simulate error when input file does not exist
-	tempDir, err := ioutil.TempDir("", "taco_test")
+	tempDir, err := os.MkdirTemp("", "taco_test")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -218,7 +218,7 @@ func TestWriteFileContent_OutputFileError(t *testing.T) {
 	outputFile := filepath.Join(tempDir, "output.txt")
 	content := "Hello, Taco!"
 
-	ioutil.WriteFile(inputFile, []byte(content), 0644)
+	os.WriteFile(inputFile, []byte(content), 0644)
 
 	outFile, err := os.Create(outputFile)
 	if err != nil {
@@ -234,7 +234,7 @@ func TestWriteFileContent_OutputFileError(t *testing.T) {
 
 // Test for processDirectory function
 func TestProcessDirectory(t *testing.T) {
-	tempDir, err := ioutil.TempDir("", "taco_test")
+	tempDir, err := os.MkdirTemp("", "taco_test")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -267,7 +267,7 @@ func TestProcessDirectory(t *testing.T) {
 	}
 
 	// Read the output file
-	outputContent, err := ioutil.ReadFile(outputFilePath)
+	outputContent, err := os.ReadFile(outputFilePath)
 	if err != nil {
 		t.Fatalf("Failed to read output file: %v", err)
 	}
@@ -341,7 +341,7 @@ func TestConcatenateFiles(t *testing.T) {
 		t.Errorf("concatenateFiles returned error: %v", err)
 	}
 
-	outputContent, err := ioutil.ReadFile(outputFilePath)
+	outputContent, err := os.ReadFile(outputFilePath)
 	if err != nil {
 		t.Fatalf("Failed to read output file: %v", err)
 	}
@@ -356,7 +356,7 @@ func TestConcatenateFiles(t *testing.T) {
 
 func TestConcatenateFiles_ErrorCases(t *testing.T) {
 	// Simulate error when directory does not exist
-	tempDir, err := ioutil.TempDir("", "taco_test")
+	tempDir, err := os.MkdirTemp("", "taco_test")
 	if err != nil {
 		t.Fatalf("Failed to create temp directory: %v", err)
 	}
@@ -380,14 +380,14 @@ func TestConcatenateFiles_OutputFileError(t *testing.T) {
     }
     defer os.RemoveAll(tempDir)
 
-    // Create a text file in tempDir
+    // Create a text file in tempDir to ensure the output file is attempted to be created
     testFilePath := filepath.Join(tempDir, "test.txt")
-    err = ioutil.WriteFile(testFilePath, []byte("test content"), 0644)
+    err = os.WriteFile(testFilePath, []byte("test content"), 0644)
     if err != nil {
         t.Fatalf("Failed to write test file: %v", err)
     }
 
-    // Create a directory where the output file should be
+    // Create a directory where the output file should be, causing an error when trying to write
     outputFilePath := filepath.Join(tempDir, "taco.txt")
     if err := os.Mkdir(outputFilePath, 0755); err != nil {
         t.Fatalf("Failed to create directory %s: %v", outputFilePath, err)
@@ -399,6 +399,13 @@ func TestConcatenateFiles_OutputFileError(t *testing.T) {
     if err == nil {
         t.Errorf("Expected error when output file path is a directory, got nil")
     }
+
+    // Defer the removal of the output directory
+    defer func() {
+        if err := os.RemoveAll(outputFilePath); err != nil && !os.IsNotExist(err) {
+            t.Errorf("Failed to remove output directory: %v", err)
+        }
+    }()
 }
 
 // Test for run function (refactored main logic)
