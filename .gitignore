@@ -5,10 +5,10 @@
 /taco.out
 
 # Coverage report file
-/coverage.html
+coverage.html
 
 # Merged text files
-/taco.txt
+taco.txt
 
 # Build directories and files
 /build

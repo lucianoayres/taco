@@ -226,19 +226,24 @@ func isTextFile(path string) bool {
 }
 
 func main() {
+	if err := run(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func run() error {
 	var err error
 	// Get the initial working directory
 	initialWorkingDir, err = os.Getwd()
 	if err != nil {
-		fmt.Println("Error getting current working directory:", err)
-		os.Exit(1)
+		return fmt.Errorf("Error getting current working directory: %v", err)
 	}
 
 	// Get the executable's full path to exclude it from concatenation
 	scriptFilePath, err := os.Executable()
 	if err != nil {
-		fmt.Println("Error getting executable path:", err)
-		os.Exit(1)
+		return fmt.Errorf("Error getting executable path: %v", err)
 	}
 
 	// Parse command-line arguments
@@ -247,8 +252,7 @@ func main() {
 	// Get the absolute path of the output file
 	outputFilePath, err := filepath.Abs(outputFileName)
 	if err != nil {
-		fmt.Println("Error getting absolute path of output file:", err)
-		os.Exit(1)
+		return fmt.Errorf("Error getting absolute path of output file: %v", err)
 	}
 
 	// Get the list of paths to exclude (script and output file)
@@ -256,7 +260,7 @@ func main() {
 
 	// Concatenate files from the directories
 	if err := concatenateFiles(outputFilePath, directories, excludedPaths); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return err
 	}
+	return nil
 }
