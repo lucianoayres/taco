@@ -1,0 +1,103 @@
+name: Release
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Run tests
+              run: make test
+
+    build:
+        needs: test
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Cache Build Dependencies
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cache
+                  key: ${{ runner.os }}-build-${{ hashFiles('**/Makefile') }}
+                  restore-keys: |
+                      ${{ runner.os }}-build-
+
+            - name: Build and package the binary
+              run: |
+                  make build
+
+            - name: Set executable permissions
+              run: chmod +x ./taco
+
+            - name: Upload artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: ${{ runner.os }}-binary
+                  path: taco
+
+    git-tagging:
+        needs: build
+        runs-on: ubuntu-latest
+        outputs:
+            tag: ${{ steps.generate_tag.outputs.tag }}
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0 # Ensure full history for tagging
+
+            - name: Set Git identity
+              run: |
+                  git config user.name "github-actions[bot]"
+                  git config user.email "github-actions[bot]@users.noreply.github.com"
+
+            - name: Generate version tag
+              id: generate_tag
+              run: |
+                  version=$(date +"%Y.%m.%d.%H%M%S")
+                  echo "tag=v$version" >> $GITHUB_OUTPUT
+
+            - name: Create Git tag
+              run: |
+                  git tag -a "${{ steps.generate_tag.outputs.tag }}" -m "Release version ${{ steps.generate_tag.outputs.tag }}"
+                  git push origin "${{ steps.generate_tag.outputs.tag }}"
+
+    release:
+        needs: git-tagging
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+
+            - name: Download artifact
+              uses: actions/download-artifact@v4
+              with:
+                  name: ${{ runner.os }}-binary
+
+            - name: Generate release notes
+              id: generate_notes
+              run: |
+                  notes="Changes in this Release:\n"
+                  notes+=$(git log -1 --pretty=format:"%s")
+                  echo "body=$notes" >> $GITHUB_OUTPUT
+
+            - name: Create Release and Upload Asset
+              uses: softprops/action-gh-release@v1
+              with:
+                  tag_name: "${{ needs.git-tagging.outputs.tag }}"
+                  name: "Release ${{ needs.git-tagging.outputs.tag }}"
+                  body: "${{ steps.generate_notes.outputs.body }}"
+                  files: ./taco
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Cleanup release notes
+              run: rm -f release_notes.md
