@@ -1,0 +1,49 @@
+# Binaries
+/taco
+/taco.exe
+/taco.dms
+/taco.out
+
+# Merged text files
+/taco.txt
+
+# Build directories and files
+/build
+/dist
+/bin
+
+# Logs and output
+*.log
+*.out
+*.tmp
+
+# Go-specific files
+*.exe
+*.test
+*.prof
+*.cover
+*.so
+*.a
+*.o
+
+# Dependency directories
+/vendor/
+
+# Go modules
+/go.sum
+/go.work
+/go.work.sum
+
+# Editor & IDE specific files
+.idea/
+.vscode/
+*.swp
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Backup files
+*.bak
+*.old
+*.orig
