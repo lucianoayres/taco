@@ -8,34 +8,33 @@
 
 ## What's Taco? 🌮
 
-Taco is a tool designed to make your workflow with large language models (LLMs) easier. Instead of manually copying and pasting individual project files into a prompt, Taco rolls up all your text files into one neat file, so you can focus on what matters. Think of it like a burrito for your files—whether it’s notes, code snippets, or any other text, Taco simplifies the process by creating a single file with everything you need.
+**Taco** is a simple tool that gathers all the text files from a directory and its subdirectories and combines them into a single text file. It’s perfect for pulling together source code or text content to use as a prompt with large language models (LLMs), making the process easier and more efficient!
+
+With Taco, you can forget about manually copying and pasting individual files. Just one command collects all your text files, like wrapping them into one big burrito! 😄
 
 ## In Action 🌶️
 
-![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/demo_taco.gif?raw=true)
+![Taco Demo](https://github.com/lucianoayres/taco/blob/main/images/demo_taco.gif?raw=true)
 
 ## Why Taco? 🤔
 
-Because manually handling files for LLM prompts can be time-consuming and messy. With Taco, you can:
+Manually handling files for LLM prompts can be time-consuming and messy. Taco automates this process, allowing you to:
 
--   🌮 **Concatenate all text files** in a directory and its subdirectories into one comprehensive file for easy prompting.
--   📂 **Recursively process subdirectories**, gathering all your important text files automatically.
--   🚀 **Display processing status** for each file, giving you clear progress updates.
--   ✨ **Optional arguments** allow you to specify which directories and file names to use.
--   🔄 **Append mode** helps you avoid accidental overwrites, so you can keep adding to your project file seamlessly.
+-   🌮 **Automatically gather all text files** from directories and subdirectories.
+-   🚫 **Skip hidden and binary files**, focusing only on essential text files.
+-   📂 **Combine everything into a single text file**, ideal for using source code in prompts.
+-   🚀 **Provide status updates** as it processes.
 
-Taco is your go-to solution for organizing and prepping files, all with the efficiency of a single command!
+By simplifying the process, Taco makes it easier and more efficient to prepare your source code or text content for LLMs.
 
 ## Features ✨
 
--   🌮 **Concatenate all text files** in the specified directories and their subdirectories to create a unified prompt file.
--   📂 **Recursive traversal** ensures all nested text files are included.
--   🚫 **Exclusion of binary and hidden files**, keeping your output lean and clean.
--   🔄 **Append mode** prevents overwriting, only growing the output file when needed.
--   📝 **Status messages** that show file-by-file progress.
--   📁 **Directory reporting** for directories without text files, ensuring no data is missed.
-
-Taco is your go-to solution for organizing and prepping files, all with the efficiency of a single command!
+-   🌮 **Automatic text file gathering**: Collects all text files from specified directories and their subdirectories.
+-   📂 **Recursive traversal**: Processes all nested directories.
+-   🚫 **Exclusion of hidden and binary files**: Keeps your output clean by skipping unnecessary files.
+-   📝 **Status messages**: Provides clear progress updates during processing.
+-   🔄 **Append mode**: Prevents accidental overwrites by appending to existing output files.
+-   ✨ **Customizable output**: Specify output file names and directories as needed.
 
 ## Project Structure 📁
 
@@ -64,7 +63,7 @@ cd taco
 
 ### 2. Initialize the Go Module
 
-If you're cloning the project for the first time, ensure you have Go installed, then run:
+Ensure you have Go installed, then run:
 
 ```bash
 go mod tidy
@@ -86,7 +85,7 @@ go run ./src
 
 #### Option 2: Use the Makefile
 
-We've provided a Makefile to simplify commands. You can run:
+Use the provided Makefile to simplify commands:
 
 ```bash
 make run
@@ -94,7 +93,7 @@ make run
 
 ### 4. Building Taco
 
-You can also build Taco into an executable. To build the project from the root directory, use this command:
+You can build Taco into an executable. To build the project from the root directory, use:
 
 ```bash
 go build -o taco ./src
@@ -114,7 +113,7 @@ This will create an executable file called `taco` in the root directory. You can
 
 ### 5. Installing Taco
 
-To install Taco so you can use it from anywhere, you can move the executable to your local bin directory:
+To install Taco so you can use it from anywhere, move the executable to your local bin directory:
 
 ```bash
 sudo make install
@@ -126,7 +125,7 @@ This will build the executable and move it to `/usr/local/bin/`.
 
 ### Default Use (In Current Directory and Subdirectories)
 
-Just run **Taco** without any arguments, and it will recursively concatenate all the **text files** in the directory where the command is executed (excluding hidden files, binary files, and itself):
+Run **Taco** without any arguments, and it will recursively concatenate all the **text files** in the current directory and its subdirectories (excluding hidden and binary files, and itself):
 
 ```bash
 taco
@@ -150,17 +149,17 @@ This will create (or append to) a file called `taco.txt`, which will contain:
 
 ### Custom Output File
 
-Want to save your file mashup to something other than the default `taco.txt`? No problem! Just specify your preferred output file name:
+Specify your preferred output file name:
 
 ```bash
 taco -output=my-taco.txt
 ```
 
-Now everything goes into `my-taco.txt`, all wrapped up like a taco filled with data goodness.
+Now everything goes into `my-taco.txt`.
 
 ### Custom Directories
 
-You can also tell Taco which directories to collect files from. Taco will recursively process the **text files in those directories and all their subdirectories**, excluding hidden and binary files.
+Specify directories to collect files from. Taco will recursively process the **text files in those directories and all their subdirectories**:
 
 ```bash
 taco /path/to/dir1 /path/to/dir2
@@ -176,16 +175,16 @@ taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 
 Taco automatically skips:
 
--   The script itself (because no taco should eat itself).
--   The output file (so it doesn’t end up eating its own leftovers).
+-   The script itself.
+-   The output file.
 -   **Hidden files and directories** (those starting with a dot `.`).
--   **Binary files** (like images, executables, etc.).
+-   **Binary files** (images, executables, etc.).
 
 ### Status Messages
 
-As Taco processes your files, it provides informative status messages:
+As Taco processes your files, it provides status messages:
 
-```bash
+```
 Processing LICENSE ... Done
 Processing README.md ... Done
 Processing src/main.go ... Done
@@ -193,21 +192,21 @@ No text files found in docs/empty_folder
 Files concatenated successfully into taco.txt
 ```
 
--   **Processing [file] ... Done**: Indicates that a file has been processed successfully.
--   **No text files found in [directory]**: Informs you when a directory (or subdirectory) contains no text files.
+-   **Processing [file] ... Done**: File processed successfully.
+-   **No text files found in [directory]**: Directory contains no text files.
 
 ## Pro Tips 💡
 
--   **Recursive Processing**: Taco automatically traverses all subdirectories to find text files.
--   **Only Text Files**: Taco includes only text files in the concatenation. It automatically detects text files based on their content, so no need to worry about file extensions.
--   **Hidden Files and Directories**: Files and directories starting with a dot `.` are considered hidden and are skipped.
--   **Multiple Directories?** Just specify them all in the command, and Taco will grab text files from all specified directories and their subdirectories.
--   **Appending?** Run the same command multiple times, and Taco won’t overwrite your carefully crafted file—it’ll just keep adding to it like a buffet plate!
--   **Check for Empty Directories**: Taco informs you about directories without text files, so you can keep your folders tidy.
+-   **Recursive Processing**: Taco automatically traverses all subdirectories.
+-   **Only Text Files**: Includes only text files based on content, not file extension.
+-   **Hidden Files and Directories**: Skipped if starting with a dot `.`.
+-   **Multiple Directories**: Specify multiple directories to process files from all of them.
+-   **Appending**: Taco appends to existing files unless you delete the output file first.
+-   **Check for Empty Directories**: Taco informs you about directories without text files.
 
 ## Makefile Commands 🛠️
 
-To simplify using Taco, we've provided a **Makefile** with handy commands:
+Simplify using Taco with the **Makefile** commands:
 
 -   **Run Taco**:
 
@@ -247,15 +246,11 @@ To simplify using Taco, we've provided a **Makefile** with handy commands:
 taco
 ```
 
-This command concatenates all text files in the current directory and its subdirectories into `taco.txt`.
-
 ### Concatenate Text Files with Custom Output Filename
 
 ```bash
 taco -output=my-concatenated-files.txt
 ```
-
-All text files in the current directory and its subdirectories will be concatenated into `my-concatenated-files.txt`.
 
 ### Concatenate Text Files from Multiple Directories
 
@@ -263,17 +258,15 @@ All text files in the current directory and its subdirectories will be concatena
 taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 ```
 
-This command recursively concatenates all text files from `/path/to/dir1` and `/path/to/dir2` into `my-taco.txt`.
-
 ### Exclude Specific Files or Directories
 
-While Taco automatically skips hidden and binary files, if you want to exclude specific files or directories, you can reorganize your folders or temporarily rename files. Future versions may include flags for exclusion.
+Currently, to exclude specific files or directories, you can reorganize your folders or temporarily rename files. Future versions may include exclusion flags.
 
 ## Limitations ⚠️
 
--   **Binary Files Excluded**: Binary files (like images, videos, executables) are automatically excluded to prevent unexpected results.
--   **Hidden Files Skipped**: Files and directories starting with a dot `.` are considered hidden and are skipped.
--   **No Exclusion Flags**: Currently, there are no flags to exclude specific files or directories from processing.
+-   **Binary Files Excluded**: Binary files are automatically excluded.
+-   **Hidden Files Skipped**: Files and directories starting with a dot `.` are skipped.
+-   **No Exclusion Flags**: Currently, no flags to exclude specific files or directories.
 
 ## Roadmap 🗺️
 
@@ -285,8 +278,8 @@ While Taco automatically skips hidden and binary files, if you want to exclude s
 
 ## Contributions 🍽️
 
-Found a bug? Have a feature idea? Or maybe you just want to share your love of tacos? Feel free to open an issue or create a pull request on [GitHub](https://github.com/lucianoayres/taco). Let’s make Taco even tastier!
+Found a bug or have a feature request? Open an issue or create a pull request on [GitHub](https://github.com/lucianoayres/taco). Let's make Taco even better!
 
 ### License 📄
 
-This project is licensed under the [MIT License](LICENSE). Eat tacos responsibly.
+This project is licensed under the [MIT License](LICENSE). Enjoy your tacos responsibly!
