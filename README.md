@@ -4,11 +4,13 @@
 
 ## Roll up all your text files from directories into one simple text file!
 
-[What's Taco? 🌮](#whats-taco-) · [Why Taco? 🤔](#why-taco-) · [Features ✨](#features-) · [Project Structure 📁](#project-structure-) · [Getting Started 🚀](#getting-started-) · [How to Use Taco 🌮](#how-to-use-taco-) · [Pro Tips 💡](#pro-tips-) · [Makefile Commands 🛠️](#makefile-commands-) · [Examples 📚](#examples-) · [Limitations ⚠️](#limitations-) · [Contributions 🍽️](#contributions-) · [License 📄](#license-)
+[What's Taco? 🌮](#whats-taco-) · [In Action 🌶️](#in-action-) · [Why Taco? 🤔](#why-taco-) · [Features ✨](#features-) · [Project Structure 📁](#project-structure-) · [Getting Started 🚀](#getting-started-) · [How to Use Taco 🌮](#how-to-use-taco-) · [Pro Tips 💡](#pro-tips-) · [Makefile Commands 🛠️](#makefile-commands-) · [Examples 📚](#examples-) · [Limitations ⚠️](#limitations-) · [Roadmap 🗺️](#roadmap-) · [Contributions 🍽️](#contributions-) · [License 📄](#license-)
 
 ## What's Taco? 🌮
 
 Taco is a tool designed to make your workflow with large language models (LLMs) easier. Instead of manually copying and pasting individual project files into a prompt, Taco rolls up all your text files into one neat file, so you can focus on what matters. Think of it like a burrito for your files—whether it’s notes, code snippets, or any other text, Taco simplifies the process by creating a single file with everything you need.
+
+## In Action 🌶️
 
 ![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/demo_taco.gif?raw=true)
 
@@ -272,6 +274,14 @@ While Taco automatically skips hidden and binary files, if you want to exclude s
 -   **Binary Files Excluded**: Binary files (like images, videos, executables) are automatically excluded to prevent unexpected results.
 -   **Hidden Files Skipped**: Files and directories starting with a dot `.` are considered hidden and are skipped.
 -   **No Exclusion Flags**: Currently, there are no flags to exclude specific files or directories from processing.
+
+## Roadmap 🗺️
+
+-   [x] **Launch v1.0**
+-   [ ] **Add support for `.gitignore` files**
+-   [ ] **Add argument to exclude directories**
+-   [ ] **Add option to exclude files by extension**
+-   [ ] **Add argument to exclude files using regex**
 
 ## Contributions 🍽️
 
