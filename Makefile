@@ -27,7 +27,7 @@ build:
 clean:
 	rm -f $(OUTPUT) $(COVERAGE_OUT) $(COVERAGE_HTML)
 
-# Set the local Git config to use the custom hooks directory (./.git-hooks)
+# Set the local Git config to use the custom hooks directory
 .PHONY: setup-git-hooks
 setup-git-hooks:
 	@echo "Setting up git hooks..."
