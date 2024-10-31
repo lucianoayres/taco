@@ -31,8 +31,8 @@ clean:
 .PHONY: setup-git-hooks
 setup-git-hooks:
 	@echo "Setting up git hooks..."
-	git config core.hooksPath git-hooks
-	chmod +x git-hooks/*
+	git config core.hooksPath .git-hooks
+	chmod +x .git-hooks/*
 	@echo "Git hooks have been configured successfully."
 
 # Run tests
