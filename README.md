@@ -23,6 +23,7 @@ Manually handling files for LLM prompts can be time-consuming and messy. Taco au
 -   🌮 **Automatically gather all text files** from directories and subdirectories.
 -   🚫 **Skip hidden and binary files**, focusing only on essential text files.
 -   📂 **Combine everything into a single text file**, ideal for using source code in prompts.
+-   🔍 **Include specific file types** with the new `-include-ext` flag.
 -   🚀 **Provide status updates** as it processes.
 
 By simplifying the process, Taco makes it easier and more efficient to prepare your source code or text content for LLMs.
@@ -32,6 +33,7 @@ By simplifying the process, Taco makes it easier and more efficient to prepare y
 -   🌮 **Automatic text file gathering**: Collects all text files from specified directories and their subdirectories.
 -   📂 **Recursive traversal**: Processes all nested directories.
 -   🚫 **Exclusion of hidden and binary files**: Keeps your output clean by skipping unnecessary files.
+-   📁 **Include specific file types**: Use the `-include-ext` flag to specify which file extensions to include.
 -   📝 **Status messages**: Provides clear progress updates during processing.
 -   🔄 **Append mode**: Prevents accidental overwrites by appending to existing output files.
 -   ✨ **Customizable output**: Specify output file names and directories as needed.
@@ -255,6 +257,42 @@ Or combine it with a custom output:
 taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 ```
 
+### Including Specific File Extensions
+
+Use the new `-include-ext` flag to specify which file extensions to include in the concatenation process. This allows you to focus on specific types of files, such as only Go source files and Markdown documentation.
+
+**Usage Example:**
+
+```bash
+taco -include-ext=.go,.md
+```
+
+This command will concatenate only `.go` and `.md` files from the specified directories.
+
+**Additional Examples:**
+
+-   **Including Extensions Without Leading Dots:**
+
+    ```bash
+    taco -include-ext=go,md
+    ```
+
+    Taco will automatically prepend a dot to extensions without a leading dot.
+
+-   **Including Extensions with Mixed Case and Spaces:**
+
+    ```bash
+    taco -include-ext=".Go, .MD , .Txt"
+    ```
+
+    Taco handles case insensitivity and trims whitespace around extensions.
+
+-   **Combining `-include-ext` with Other Flags:**
+
+    ```bash
+    taco -output=combined.txt -include-ext=.js,.json /path/to/dir1 /path/to/dir2
+    ```
+
 ### Skipping Files You Don’t Want
 
 Taco automatically skips:
@@ -283,6 +321,7 @@ Files concatenated successfully into taco.txt
 
 -   **Recursive Processing**: Taco automatically traverses all subdirectories.
 -   **Only Text Files**: Includes only text files based on content, not file extension.
+-   **Including Specific Extensions**: Use the `-include-ext` flag to include only files with certain extensions.
 -   **Hidden Files and Directories**: Skipped if starting with a dot `.`.
 -   **Multiple Directories**: Specify multiple directories to process files from all of them.
 -   **Appending**: Taco appends to existing files unless you delete the output file first.
@@ -360,15 +399,36 @@ taco -output=my-concatenated-files.txt
 taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 ```
 
-### Exclude Specific Files or Directories
+### Concatenate Only Go and Markdown Files
 
-Currently, to exclude specific files or directories, you can reorganize your folders or temporarily rename files. Future versions may include exclusion flags.
+```bash
+taco -include-ext=.go,.md
+```
+
+### Concatenate Only Go and Markdown Files with Custom Output
+
+```bash
+taco -output=code_docs.txt -include-ext=.go,.md /path/to/code /path/to/docs
+```
+
+### Including Extensions Without Leading Dots
+
+```bash
+taco -include-ext=go,md
+```
+
+### Including Extensions with Mixed Case and Spaces
+
+```bash
+taco -include-ext=".Go, .MD , .Txt"
+```
 
 ## Limitations ⚠️
 
 -   **Binary Files Excluded**: Binary files are automatically excluded.
 -   **Hidden Files Skipped**: Files and directories starting with a dot `.` are skipped.
 -   **No Exclusion Flags**: Currently, no flags to exclude specific files or directories.
+-   **File Extension Detection**: While `-include-ext` allows focusing on specific file types, it relies on file extensions to determine inclusion, which may not always reflect the file's actual content type.
 
 ## Roadmap 🗺️
 
@@ -377,6 +437,10 @@ Currently, to exclude specific files or directories, you can reorganize your fol
 -   [ ] **Add argument to exclude directories**
 -   [ ] **Add option to exclude files by extension**
 -   [ ] **Add argument to exclude files using regex**
+-   [ ] **Implement `-include-ext` feature** (Completed)
+-   [ ] **Enhance error handling and logging**
+-   [ ] **Support for additional file content types**
+-   [ ] **Cross-platform binary releases**
 
 ## Contributions 🍽️
 

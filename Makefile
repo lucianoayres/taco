@@ -26,6 +26,7 @@ build:
 .PHONY: clean
 clean:
 	rm -f $(OUTPUT) $(COVERAGE_OUT) $(COVERAGE_HTML)
+	rm taco.txt
 
 # Set the local Git config to use the custom hooks directory
 .PHONY: setup-git-hooks
