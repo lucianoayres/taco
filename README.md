@@ -252,7 +252,7 @@ If no directories are specified with `-include-dir`, Taco will process all subdi
 
 ---
 
-### Notes (continued)
+### Notes
 
 -   **Precedence**  
     When both `-include-ext` and `-exclude-ext` are used, Taco first filters files based on the `-include-ext` list and then excludes any files that match the `-exclude-ext` list.
