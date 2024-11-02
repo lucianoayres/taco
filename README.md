@@ -18,25 +18,18 @@ With Taco, you can forget about manually copying and pasting individual files. J
 
 ## Why Taco? 🤔
 
-Manually handling files for LLM prompts can be time-consuming and messy. Taco automates this process, allowing you to:
-
--   🌮 **Automatically gather all text files** from directories and subdirectories.
--   🚫 **Skip hidden and binary files**, focusing only on essential text files.
--   📂 **Combine everything into a single text file**, ideal for using source code in prompts.
--   🔍 **Include specific file types** with the new `-include-ext` flag.
--   🚀 **Provide status updates** as it processes.
-
-By simplifying the process, Taco makes it easier and more efficient to prepare your source code or text content for LLMs.
+Working with large collections of text files can be cumbersome, especially when preparing data for large language models or consolidating documentation and source code. Manually aggregating these files is not only time-consuming but also prone to errors and inconsistencies. **Taco** streamlines this process by automating the collection and consolidation of text files, ensuring a clean and efficient workflow. Whether you're a developer looking to create comprehensive prompts for LLMs or need to compile documentation from various sources, Taco simplifies your tasks and boosts your productivity.
 
 ## Features ✨
 
--   🌮 **Automatic text file gathering**: Collects all text files from specified directories and their subdirectories.
--   📂 **Recursive traversal**: Processes all nested directories.
--   🚫 **Exclusion of hidden and binary files**: Keeps your output clean by skipping unnecessary files.
--   📁 **Include specific file types**: Use the `-include-ext` flag to specify which file extensions to include.
--   📝 **Status messages**: Provides clear progress updates during processing.
--   🔄 **Append mode**: Prevents accidental overwrites by appending to existing output files.
--   ✨ **Customizable output**: Specify output file names and directories as needed.
+-   🌮 **Automatic Text File Gathering**: Collects all text files from specified directories and their subdirectories.
+-   📂 **Recursive Traversal**: Processes all nested directories seamlessly.
+-   🚫 **Exclusion of Hidden and Binary Files**: Keeps your output clean by skipping unnecessary files.
+-   📁 **Include Specific File Types**: Use the `-include-ext` flag to specify which file extensions to include.
+-   ❌ **Exclude Specific File Types**: Use the `-exclude-ext` flag to specify which file extensions to exclude.
+-   📝 **Status Messages**: Provides clear progress updates during processing.
+-   🔄 **Append Mode**: Prevents accidental overwrites by appending to existing output files.
+-   ✨ **Customizable Output**: Specify output file names and directories as needed.
 
 ## Project Structure 📁
 
@@ -259,7 +252,7 @@ taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
 
 ### Including Specific File Extensions
 
-Use the new `-include-ext` flag to specify which file extensions to include in the concatenation process. This allows you to focus on specific types of files, such as only Go source files and Markdown documentation.
+Use the `-include-ext` flag to specify which file extensions to include in the concatenation process. This allows you to focus on specific types of files, such as only Go source files and Markdown documentation.
 
 **Usage Example:**
 
@@ -293,6 +286,60 @@ This command will concatenate only `.go` and `.md` files from the specified dire
     taco -output=combined.txt -include-ext=.js,.json /path/to/dir1 /path/to/dir2
     ```
 
+### Excluding Specific File Extensions
+
+Use the new `-exclude-ext` flag to specify which file extensions to exclude from the concatenation process. This enables you to omit certain file types that are not needed in the final output.
+
+**Usage Example:**
+
+```bash
+taco -exclude-ext=.test,.spec.js
+```
+
+This command will exclude all `.test` and `.spec.js` files from being concatenated.
+
+**Additional Examples:**
+
+-   **Excluding Extensions Without Leading Dots:**
+
+    ```bash
+    taco -exclude-ext=test,spec.js
+    ```
+
+    Taco will automatically prepend a dot to extensions without a leading dot.
+
+-   **Excluding Extensions with Mixed Case and Spaces:**
+
+    ```bash
+    taco -exclude-ext=".Test, .SPEC.JS , .Tmp"
+    ```
+
+    Taco handles case insensitivity and trims whitespace around extensions.
+
+-   **Combining `-exclude-ext` with Other Flags:**
+
+    ```bash
+    taco -output=filtered.txt -exclude-ext=.log,.tmp /path/to/dir1 /path/to/dir2
+    ```
+
+### Including and Excluding Specific File Extensions
+
+You can combine both `-include-ext` and `-exclude-ext` flags to fine-tune which files are included or excluded in the concatenation process.
+
+**Usage Example:**
+
+```bash
+taco -include-ext=.go,.md -exclude-ext=.test,.spec.js
+```
+
+This command will include only `.go` and `.md` files while excluding any `.test` and `.spec.js` files from those included types.
+
+**Important Notes:**
+
+-   **Precedence:** When both `-include-ext` and `-exclude-ext` are used, Taco first filters files based on the `-include-ext` list and then excludes any files that match the `-exclude-ext` list.
+-   **Case Insensitivity:** Both flags handle case insensitivity, so `.GO` is treated the same as `.go`.
+-   **Whitespace Handling:** Whitespace around extensions is automatically trimmed.
+
 ### Skipping Files You Don’t Want
 
 Taco automatically skips:
@@ -322,6 +369,7 @@ Files concatenated successfully into taco.txt
 -   **Recursive Processing**: Taco automatically traverses all subdirectories.
 -   **Only Text Files**: Includes only text files based on content, not file extension.
 -   **Including Specific Extensions**: Use the `-include-ext` flag to include only files with certain extensions.
+-   **Excluding Specific Extensions**: Use the `-exclude-ext` flag to omit files with certain extensions.
 -   **Hidden Files and Directories**: Skipped if starting with a dot `.`.
 -   **Multiple Directories**: Specify multiple directories to process files from all of them.
 -   **Appending**: Taco appends to existing files unless you delete the output file first.
@@ -411,33 +459,46 @@ taco -include-ext=.go,.md
 taco -output=code_docs.txt -include-ext=.go,.md /path/to/code /path/to/docs
 ```
 
-### Including Extensions Without Leading Dots
+### Excluding Specific File Extensions
 
 ```bash
-taco -include-ext=go,md
+taco -exclude-ext=.test,.spec.js
 ```
 
-### Including Extensions with Mixed Case and Spaces
+### Excluding Extensions Without Leading Dots
 
 ```bash
-taco -include-ext=".Go, .MD , .Txt"
+taco -exclude-ext=test,spec.js
+```
+
+### Excluding Extensions with Mixed Case and Spaces
+
+```bash
+taco -exclude-ext=".Test, .SPEC.JS , .Tmp"
+```
+
+### Combining `-include-ext` and `-exclude-ext` Flags
+
+```bash
+taco -include-ext=.go,.md -exclude-ext=.test,.spec.js
 ```
 
 ## Limitations ⚠️
 
 -   **Binary Files Excluded**: Binary files are automatically excluded.
 -   **Hidden Files Skipped**: Files and directories starting with a dot `.` are skipped.
--   **No Exclusion Flags**: Currently, no flags to exclude specific files or directories.
--   **File Extension Detection**: While `-include-ext` allows focusing on specific file types, it relies on file extensions to determine inclusion, which may not always reflect the file's actual content type.
+-   **No Exclusion Flags for Directories**: Currently, there are no flags to exclude specific directories.
+-   **File Extension Detection**: While `-include-ext` and `-exclude-ext` allow focusing on specific file types, they rely on file extensions to determine inclusion/exclusion, which may not always reflect the file's actual content type.
+-   **Conflict Handling**: When both `-include-ext` and `-exclude-ext` are used, files matching both criteria may lead to unexpected behaviors if not carefully managed.
 
 ## Roadmap 🗺️
 
 -   [x] **Launch v1.0**
+-   [x] **Implement `-include-ext` feature** (Completed)
+-   [x] **Implement `-exclude-ext` feature** (Completed)
 -   [ ] **Add support for `.gitignore` files**
 -   [ ] **Add argument to exclude directories**
--   [ ] **Add option to exclude files by extension**
 -   [ ] **Add argument to exclude files using regex**
--   [ ] **Implement `-include-ext` feature** (Completed)
 -   [ ] **Enhance error handling and logging**
 -   [ ] **Support for additional file content types**
 -   [ ] **Cross-platform binary releases**
