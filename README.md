@@ -221,7 +221,8 @@ The above example will process files in `/path/to/dir1` and `/path/to/dir2` acco
 #### Positional Arguments
 
 -   **Directory Paths**  
-    Specify one or more directories to process. Taco will concatenate files from each listed directory according to the specified options.  
+    Specify one or more directories to process. Taco will concatenate files from each listed directory according to the specified options.
+
     **Example:** `/path/to/dir1 /path/to/dir2`
 
 #### Optional Arguments
