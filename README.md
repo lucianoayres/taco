@@ -213,8 +213,8 @@ Taco offers several command-line arguments to customize its behavior. Below is a
 <table>
   <thead>
     <tr>
-      <th style="width: 18%;">**Argument**</th>
-      <th style="width: 67%;">**Description**</th>
+      <th style="width: 20%;">**Argument**</th>
+      <th style="width: 65%;">**Description**</th>
       <th style="width: 15%;">**Default**</th>
     </tr>
   </thead>
