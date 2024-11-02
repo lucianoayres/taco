@@ -18,7 +18,12 @@ With Taco, you can forget about manually copying and pasting individual files. J
 
 ## Why Taco? 🤔
 
-Working with large collections of text files can be cumbersome, especially when preparing data for large language models or consolidating documentation and source code. Manually aggregating these files is not only time-consuming but also prone to errors and inconsistencies. **Taco** streamlines this process by automating the collection and consolidation of text files, ensuring a clean and efficient workflow. Whether you're a developer looking to create comprehensive prompts for LLMs or need to compile documentation from various sources, Taco simplifies your tasks and boosts your productivity.
+-   🗂️ Efficient Aggregation: Automatically collects and consolidates large numbers of text files.
+-   ⏱️ Saves Time: Eliminates the need for manual copying and pasting, speeding up your workflow.
+-   🛡️ Reduces Errors: Minimizes inconsistencies and mistakes associated with manual file handling.
+-   🤖 LLM Integration: Perfect for preparing data and creating comprehensive prompts for large language models.
+-   📚 Simplifies Documentation: Easily compiles documentation and source code from various sources.
+-   🚀 Boosts Productivity: Streamlines tasks to enhance overall efficiency and effectiveness.
 
 ## Features ✨
 
