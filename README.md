@@ -25,18 +25,15 @@ With Taco, you can forget about manually copying and pasting individual files. J
 -   📚 **Simplifies Documentation**: Easily compiles documentation and source code from various sources.
 -   🚀 **Boosts Productivity**: Streamlines tasks to enhance overall efficiency and effectiveness.
 
-## Features ✨
+### Features ✨
 
--   🌮 **Automatic Text File Gathering**: Collects all text files from specified directories and their subdirectories.
--   📂 **Recursive Traversal**: Processes all nested directories seamlessly.
--   🚫 **Exclusion of Hidden and Binary Files**: Keeps your output clean by skipping unnecessary files.
--   📁 **Include Specific Directories**: Use the `-include-dir` flag to specify which directories to include in the processing.
--   📁 **Include Specific File Types**: Use the `-include-ext` flag to specify which file extensions to include.
--   ❌ **Exclude Specific File Types**: Use the `-exclude-ext` flag to specify which file extensions to exclude.
--   📂 **Exclude Specific Directories**: Use the `-exclude-dir` flag to specify directories to exclude from processing.
--   📝 **Status Messages**: Provides clear progress updates during processing, including reasons for skipping files.
--   🔄 **Append Mode**: Prevents accidental overwrites by appending to existing output files.
--   ✨ **Customizable Output**: Specify output file names and directories as needed.
+-   🌮 **Automatic Gathering**: Collects text files from specified directories and subdirectories.
+-   📂 **Recursive Processing**: Handles all nested directories seamlessly.
+-   📁 **Flexible Directory and File Selection**: Choose specific directories and file types to include or exclude based on your needs.
+-   🚫 **Skip Hidden and Binary Files**: Keeps output clean by excluding unnecessary files.
+-   📝 **Detailed Status Updates**: Displays progress and reasons for skipped files.
+-   🔄 **Append Mode**: Adds to existing files without overwriting.
+-   ✨ **Customizable Output**: Set custom output file names and locations.
 
 ## Project Structure 📁
 
