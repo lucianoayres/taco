@@ -603,6 +603,7 @@ taco -output=final.txt -include-ext=.py,.md -exclude-ext=.log,.tmp -exclude-dir=
 -   [x] **Implement `-include-ext` feature** (Completed)
 -   [x] **Implement `-exclude-ext` feature** (Completed)
 -   [x] **Implement `-exclude-dir` feature** (Completed)
+-   [x] **Implement `-include-dir` feature** (Completed)
 -   [ ] **Add argument to exclude files using regex**
 -   [ ] **Add support for `.gitignore` files**
 -   [ ] **Enhance error handling and logging**
