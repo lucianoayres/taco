@@ -122,27 +122,27 @@ This command will execute the Taco code in the `src` directory, bypassing the ne
 
 Use these optional flags to customize how Taco processes your files:
 
--   **`-output`** (optional)
+-   **`-output`**
 
     -   Specifies the output file name (default: `taco.txt`).
 
--   **`-include-ext`** (optional)
+-   **`-include-ext`**
 
     -   Specify file extensions to include (e.g., `.go,.md`).
 
--   **`-exclude-ext`** (optional)
+-   **`-exclude-ext`**
 
     -   Specify file extensions to exclude (e.g., `.test,.spec.js`).
 
--   **`-exclude-dir`** (optional)
+-   **`-exclude-dir`**
 
     -   Exclude root-level directories from processing.
 
--   **`-include-dir`** (optional)
+-   **`-include-dir`**
 
     -   Include specific directories for processing.
 
--   **`-verbose`** (optional)
+-   **`-verbose`**
 
     -   Enables verbose output for detailed status messages.
 
