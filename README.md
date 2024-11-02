@@ -310,6 +310,26 @@ Or combine it with a custom output:
 taco -output=my-taco.txt -include-dir=/path/to/dir1,/path/to/dir2
 ```
 
+To process subdirectories within the current directory, you can specify relative paths:
+
+```bash
+taco -include-dir=src,docs
+```
+
+### Excluding Specific Directories
+
+Use the `-exclude-dir` flag to specify directories to exclude from processing. This is useful when you want to omit entire directories, whether they are in specific paths or within the current directory:
+
+```bash
+taco -exclude-dir=/path/to/vendor,/path/to/tests
+```
+
+Or to exclude subdirectories in the current directory:
+
+```bash
+taco -exclude-dir=vendor,tests
+```
+
 ### Including Specific File Extensions
 
 Use the `-include-ext` flag to specify which file extensions to include in the concatenation process. This allows you to focus on specific types of files, such as only Go source files and Markdown documentation.
