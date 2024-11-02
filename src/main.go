@@ -15,19 +15,31 @@ const bufferSize = 512 // Number of bytes to read for content detection
 var initialWorkingDir string
 
 // parseArguments handles the command-line arguments and returns the output filename, directories to process,
-// included extensions, excluded extensions, and excluded directories.
-func parseArguments() (string, []string, []string, []string, []string) {
+// included extensions, excluded extensions, excluded directories, verbosity flag, and an error if any.
+func parseArguments() (string, []string, []string, []string, []string, bool, error) {
 	// Define command-line flags
 	outputFileName := flag.String("output", "taco.txt", "The output file where the content will be concatenated")
 	includeExt := flag.String("include-ext", "", "Comma-separated list of file extensions to include (e.g., .go,.md)")
 	excludeExt := flag.String("exclude-ext", "", "Comma-separated list of file extensions to exclude (e.g., .test,.spec.js)")
 	excludeDir := flag.String("exclude-dir", "", "Comma-separated list of directories to exclude (e.g., vendor,tests)")
+	includeDir := flag.String("include-dir", "", "Comma-separated list of directories to include (e.g., src,docs,images). If not provided, the current directory and all its subdirectories will be processed.")
+	verbose := flag.Bool("verbose", false, "Enable verbose output")
 	flag.Parse()
 
-	// Collect directories from arguments or default to current directory
-	directories := flag.Args()
-	if len(directories) == 0 {
-		directories = []string{initialWorkingDir}
+	var directories []string
+
+	if *includeDir != "" {
+		// Parse the include-dir flag into directories
+		splitDir := strings.Split(*includeDir, ",")
+		for _, dir := range splitDir {
+			trimmedDir := strings.TrimSpace(dir)
+			if trimmedDir != "" {
+				directories = append(directories, trimmedDir)
+			}
+		}
+	} else {
+		// If include-dir is not provided, process the current directory and all its subdirectories
+		directories = append(directories, ".")
 	}
 
 	// Parse the include extensions
@@ -74,7 +86,7 @@ func parseArguments() (string, []string, []string, []string, []string) {
 		}
 	}
 
-	return *outputFileName, directories, includeExtensions, excludeExtensions, excludedDirectories
+	return *outputFileName, directories, includeExtensions, excludeExtensions, excludedDirectories, *verbose, nil
 }
 
 // getExcludedPaths returns a map containing full paths to exclude (the script itself and the output file).
@@ -86,7 +98,7 @@ func getExcludedPaths(outputFilePath, scriptFilePath string) map[string]struct{}
 }
 
 // concatenateFiles processes the directories and writes the content of each text file to the output file.
-func concatenateFiles(outputFilePath string, directories []string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string) error {
+func concatenateFiles(outputFilePath string, directories []string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string, verbose bool) error {
 	var anyFilesProcessed bool = false
 	var outputFile *os.File
 
@@ -98,29 +110,47 @@ func concatenateFiles(outputFilePath string, directories []string, excludedPaths
 
 	for _, dir := range directories {
 		// Resolve the absolute path of the directory
-		absDir, err := filepath.Abs(dir)
+		absDir, err := filepath.Abs(filepath.Join(initialWorkingDir, dir))
 		if err != nil {
 			return fmt.Errorf("error resolving absolute path of directory %s: %v", dir, err)
 		}
 
-		filesProcessed, err := processDirectory(absDir, &outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts)
+		// Check if the directory exists
+		info, err := os.Stat(absDir)
+		if err != nil {
+			if os.IsNotExist(err) {
+				if verbose {
+					fmt.Printf("Directory does not exist: %s\n", absDir)
+				}
+				continue
+			}
+			return fmt.Errorf("error accessing directory %s: %v", absDir, err)
+		}
+		if !info.IsDir() {
+			if verbose {
+				fmt.Printf("Not a directory, skipping: %s\n", absDir)
+			}
+			continue
+		}
+
+		filesProcessed, err := processDirectory(absDir, &outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts, verbose)
 		if err != nil {
 			return fmt.Errorf("error processing directory %s: %v", dir, err)
 		}
-		if !filesProcessed {
-			relativeDir, err := filepath.Rel(initialWorkingDir, dir)
+		if !filesProcessed && verbose {
+			relativeDir, err := filepath.Rel(initialWorkingDir, absDir)
 			if err != nil || relativeDir == "." {
 				relativeDir = dir
 			}
 			fmt.Printf("No text files found in %s\n", relativeDir)
-		} else {
+		} else if filesProcessed {
 			anyFilesProcessed = true
 		}
 	}
 
-	if !anyFilesProcessed {
+	if !anyFilesProcessed && verbose {
 		fmt.Println("No text files found in any of the directories.")
-	} else {
+	} else if anyFilesProcessed {
 		// Compute relative path of the output file for display
 		relativeOutputPath, err := filepath.Rel(initialWorkingDir, outputFilePath)
 		if err != nil {
@@ -134,7 +164,7 @@ func concatenateFiles(outputFilePath string, directories []string, excludedPaths
 
 // processDirectory recursively reads files in the directory and its subdirectories.
 // It returns a bool indicating whether any text files were processed.
-func processDirectory(dir string, outputFile **os.File, outputFilePath string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string) (bool, error) {
+func processDirectory(dir string, outputFile **os.File, outputFilePath string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string, verbose bool) (bool, error) {
 	filesProcessed := false
 
 	entries, err := os.ReadDir(dir)
@@ -156,6 +186,9 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 
 		// Skip excluded files and directories based on full path
 		if _, excluded := excludedPaths[path]; excluded {
+			if verbose {
+				fmt.Printf("Skipping excluded path: %s\n", path)
+			}
 			continue
 		}
 
@@ -168,22 +201,24 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 			// Normalize the relative path for comparison
 			normalizedRelPath := filepath.ToSlash(relPath)
 			if _, excluded := excludedDirs[normalizedRelPath]; excluded {
-				fmt.Printf("Skipping excluded directory: %s\n", relPath)
+				if verbose {
+					fmt.Printf("Skipping excluded directory: %s\n", relPath)
+				}
 				continue
 			}
 
 			// Recursively process subdirectories
-			subdirProcessed, err := processDirectory(path, outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts)
+			subdirProcessed, err := processDirectory(path, outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts, verbose)
 			if err != nil {
 				return false, err
 			}
-			if !subdirProcessed {
+			if !subdirProcessed && verbose {
 				relativeDir, err := filepath.Rel(initialWorkingDir, path)
 				if err != nil || relativeDir == "." {
 					relativeDir = path
 				}
 				fmt.Printf("No text files found in %s\n", relativeDir)
-			} else {
+			} else if subdirProcessed {
 				subdirFilesProcessed = true
 			}
 		} else {
@@ -233,7 +268,9 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 						}
 					}
 					if !included {
-						fmt.Printf("Skipping file %s: does not match include extensions\n", relativePath)
+						if verbose {
+							fmt.Printf("Skipping file %s: does not match include extensions\n", relativePath)
+						}
 						skipped = true
 					}
 				}
@@ -247,7 +284,9 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 						}
 					}
 					if excluded {
-						fmt.Printf("Skipping file %s: excluded by extension %s\n", relativePath, ext)
+						if verbose {
+							fmt.Printf("Skipping file %s: excluded by extension %s\n", relativePath, ext)
+						}
 						skipped = true
 					}
 				}
@@ -378,7 +417,10 @@ func run() error {
 	}
 
 	// Parse command-line arguments
-	outputFileName, directories, includeExts, excludeExts, excludeDirs := parseArguments()
+	outputFileName, directories, includeExts, excludeExts, excludeDirs, verbose, err := parseArguments()
+	if err != nil {
+		return err
+	}
 
 	// Get the absolute path of the output file
 	outputFilePath, err := filepath.Abs(outputFileName)
@@ -398,7 +440,7 @@ func run() error {
 	}
 
 	// Concatenate files from the directories
-	if err := concatenateFiles(outputFilePath, directories, excludedPaths, excludedDirsMap, includeExts, excludeExts); err != nil {
+	if err := concatenateFiles(outputFilePath, directories, excludedPaths, excludedDirsMap, includeExts, excludeExts, verbose); err != nil {
 		return err
 	}
 	return nil

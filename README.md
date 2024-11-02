@@ -30,6 +30,7 @@ With Taco, you can forget about manually copying and pasting individual files. J
 -   🌮 **Automatic Text File Gathering**: Collects all text files from specified directories and their subdirectories.
 -   📂 **Recursive Traversal**: Processes all nested directories seamlessly.
 -   🚫 **Exclusion of Hidden and Binary Files**: Keeps your output clean by skipping unnecessary files.
+-   📁 **Include Specific Directories**: Use the `-include-dir` flag to specify which directories to include in the processing.
 -   📁 **Include Specific File Types**: Use the `-include-ext` flag to specify which file extensions to include.
 -   ❌ **Exclude Specific File Types**: Use the `-exclude-ext` flag to specify which file extensions to exclude.
 -   📂 **Exclude Specific Directories**: Use the `-exclude-dir` flag to specify directories to exclude from processing.
@@ -208,12 +209,12 @@ This will build the executable and move it to `/usr/local/bin/`.
 
 ### Arguments 📝
 
-Taco can be used with or without specifying directory paths, offering flexibility in how you select directories to process. When directory paths are provided, only those paths will be processed. Without specified paths, Taco will process all subdirectories in the current directory.
+The new version of Taco requires users to specify directories with the `-include-dir` flag. Positional arguments are not supported.
 
-#### Usage Examples:
+#### Usage Examples
 
 ```bash
-taco /path/to/dir1 /path/to/dir2
+taco -include-dir=/path/to/dir1,/path/to/dir2
 ```
 
 The above example will process files in `/path/to/dir1` and `/path/to/dir2` according to the specified options.
@@ -222,13 +223,7 @@ The above example will process files in `/path/to/dir1` and `/path/to/dir2` acco
 taco
 ```
 
-If no directories are specified, Taco will process all subdirectories in the current directory.
-
-#### Positional Arguments
-
--   **Directory Paths**  
-    Specify one or more directories to process. Taco will concatenate files from each listed directory according to the specified options.  
-    **Example:** `/path/to/dir1 /path/to/dir2`
+If no directories are specified with `-include-dir`, Taco will process all subdirectories in the current directory.
 
 #### Optional Arguments
 
@@ -248,15 +243,16 @@ If no directories are specified, Taco will process all subdirectories in the cur
     Comma-separated list of directories to exclude from processing (e.g., `vendor,tests`).  
     **Default:** None
 
+-   **`-include-dir`**  
+    Comma-separated list of directories to include for processing (e.g., `src,docs,images`). If not provided, Taco will process the current directory and all its subdirectories.  
+    **Default:** Current directory and all subdirectories.
+
+-   **`-verbose`**  
+    Enables verbose output for detailed status messages.
+
 ---
 
-### Notes
-
--   **Case Insensitivity**  
-    Both `-include-ext` and `-exclude-ext` are case-insensitive. For example, `.GO` is treated the same as `.go`.
-
--   **Whitespace Handling**  
-    Whitespace around extensions and directory names is automatically trimmed.
+### Notes (continued)
 
 -   **Precedence**  
     When both `-include-ext` and `-exclude-ext` are used, Taco first filters files based on the `-include-ext` list and then excludes any files that match the `-exclude-ext` list.
@@ -302,16 +298,16 @@ Now everything goes into `my-taco.txt`.
 
 ### Custom Directories
 
-Specify directories to collect files from. Taco will recursively process the **text files in those directories and all their subdirectories**:
+Use `-include-dir` to specify directories to collect files from. Taco will recursively process the **text files in those directories and all their subdirectories**:
 
 ```bash
-taco /path/to/dir1 /path/to/dir2
+taco -include-dir=/path/to/dir1,/path/to/dir2
 ```
 
 Or combine it with a custom output:
 
 ```bash
-taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
+taco -output=my-taco.txt -include-dir=/path/to/dir1,/path/to/dir2
 ```
 
 ### Including Specific File Extensions
@@ -347,7 +343,7 @@ This command will concatenate only `.go` and `.md` files from the specified dire
 -   **Combining `-include-ext` with Other Flags:**
 
     ```bash
-    taco -output=combined.txt -include-ext=.js,.json /path/to/dir1 /path/to/dir2
+    taco -output=combined.txt -include-ext=.js,.json -include-dir=/path/to/dir1,/path/to/dir2
     ```
 
 ### Excluding Specific File Extensions
@@ -383,7 +379,7 @@ This command will exclude all `.test` and `.spec.js` files from being concatenat
 -   **Combining `-exclude-ext` with Other Flags:**
 
     ```bash
-    taco -output=filtered.txt -exclude-ext=.log,.tmp /path/to/dir1 /path/to/dir2
+    taco -output=filtered.txt -exclude-ext=.log,.tmp -include-dir=/path/to/dir1,/path/to/dir2
     ```
 
 ### Excluding Specific Directories
@@ -411,7 +407,7 @@ This command will skip the `vendor` and `tests` directories and their subdirecto
 -   **Combining `-exclude-dir` with Other Flags:**
 
     ```bash
-    taco -output=cleaned.txt -exclude-dir=build,dist /path/to/dir1 /path/to/dir2
+    taco -output=cleaned.txt -exclude-dir=build,dist -include-dir=/path/to/dir1,/path/to/dir2
     ```
 
 ### Including and Excluding Specific File Extensions
@@ -538,10 +534,10 @@ taco
 taco -output=my-concatenated-files.txt
 ```
 
-### Concatenate Text Files from Multiple Directories
+### Concatenate Text Files from Specific Directories
 
 ```bash
-taco -output=my-taco.txt /path/to/dir1 /path/to/dir2
+taco -output=my-taco.txt -include-dir=/path/to/dir1,/path/to/dir2
 ```
 
 ### Concatenate Only Go and Markdown Files
@@ -553,7 +549,7 @@ taco -include-ext=.go,.md
 ### Concatenate Only Go and Markdown Files with Custom Output
 
 ```bash
-taco -output=code_docs.txt -include-ext=.go,.md /path/to/code /path/to/docs
+taco -output=code_docs.txt -include-ext=.go,.md -include-dir=/path/to/code,/path/to/docs
 ```
 
 ### Excluding Specific File Extensions
@@ -565,7 +561,9 @@ taco -exclude-ext=.test,.spec.js
 ### Excluding Extensions Without Leading Dots
 
 ```bash
-taco -exclude-ext=test,spec.js
+taco
+
+ -exclude-ext=test,spec.js
 ```
 
 ### Excluding Extensions with Mixed Case and Spaces
@@ -589,7 +587,7 @@ taco -include-ext=.go,.md -exclude-ext=.test,.spec.js
 ### Combining All Flags
 
 ```bash
-taco -output=final.txt -include-ext=.py,.md -exclude-ext=.log,.tmp -exclude-dir=build,dist /path/to/project
+taco -output=final.txt -include-ext=.py,.md -exclude-ext=.log,.tmp -exclude-dir=build,dist -include-dir=/path/to/project
 ```
 
 ## Limitations ⚠️
