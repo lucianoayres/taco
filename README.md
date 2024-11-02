@@ -210,12 +210,37 @@ This will build the executable and move it to `/usr/local/bin/`.
 
 Taco offers several command-line arguments to customize its behavior. Below is a table listing all available arguments along with their descriptions:
 
-| **Argument**   | **Description**                                                                        | **Default**      |
-| -------------- | -------------------------------------------------------------------------------------- | ---------------- |
-| `-output`      | Specifies the name of the output file where the concatenated content will be saved.    | `taco.txt`       |
-| `-include-ext` | Comma-separated list of file extensions to include (e.g., `.go,.md`).                  | _All text files_ |
-| `-exclude-ext` | Comma-separated list of file extensions to exclude (e.g., `.test,.spec.js`).           | _None_           |
-| `-exclude-dir` | Comma-separated list of directories to exclude from processing (e.g., `vendor,tests`). | _None_           |
+<table>
+  <thead>
+    <tr>
+      <th style="width: 16%;">**Argument**</th>
+      <th style="width: 69%;">**Description**</th>
+      <th style="width: 15%;">**Default**</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>-output</code></td>
+      <td>Specifies the name of the output file where the concatenated content will be saved.</td>
+      <td><code>taco.txt</code></td>
+    </tr>
+    <tr>
+      <td><code>-include-ext</code></td>
+      <td>Comma-separated list of file extensions to include (e.g., <code>.go,.md</code>).</td>
+      <td>_All text files_</td>
+    </tr>
+    <tr>
+      <td><code>-exclude-ext</code></td>
+      <td>Comma-separated list of file extensions to exclude (e.g., <code>.test,.spec.js</code>).</td>
+      <td>_None_</td>
+    </tr>
+    <tr>
+      <td><code>-exclude-dir</code></td>
+      <td>Comma-separated list of directories to exclude from processing (e.g., <code>vendor,tests</code>).</td>
+      <td>_None_</td>
+    </tr>
+  </tbody>
+</table>
 
 **Notes:**
 
