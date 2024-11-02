@@ -16,7 +16,7 @@ func init() {
 func TestParseArguments(t *testing.T) {
 	// Set up command line arguments
 	os.Args = []string{"cmd", "-output", "output.txt", "-include-ext", ".go,.txt", "-exclude-ext", ".md"}
-	output, directories, include, exclude := parseArguments()
+	output, directories, include, exclude, _ := parseArguments()
 
 	// Check the parsed arguments
 	if output != "output.txt" {
@@ -52,23 +52,33 @@ func TestGetExcludedPaths(t *testing.T) {
 }
 
 // TestConcatenateFiles verifies that files are concatenated properly
-// TestConcatenateFiles verifies that files are concatenated properly
-// TestConcatenateFiles verifies that files are concatenated properly
 func TestConcatenateFiles(t *testing.T) {
 	// Create a temporary directory and files
 	tempDir := t.TempDir()
+	originalWorkingDir := initialWorkingDir
+	initialWorkingDir = tempDir // Set initialWorkingDir to tempDir for consistency
+	defer func() {
+		initialWorkingDir = originalWorkingDir
+	}()
+
 	file1 := filepath.Join(tempDir, "file1.txt")
 	file2 := filepath.Join(tempDir, "file2.txt")
 
 	// Write to files
-	os.WriteFile(file1, []byte("Content of file1"), 0644)
-	os.WriteFile(file2, []byte("Content of file2"), 0644)
+	err := os.WriteFile(file1, []byte("Content of file1"), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write to file1: %v", err)
+	}
+	err = os.WriteFile(file2, []byte("Content of file2"), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write to file2: %v", err)
+	}
 
 	outputFile := filepath.Join(tempDir, "output.txt")
 	excludedPaths := getExcludedPaths(outputFile, "")
 
 	// Test concatenation
-	err := concatenateFiles(outputFile, []string{tempDir}, excludedPaths, nil, nil)
+	err = concatenateFiles(outputFile, []string{tempDir}, excludedPaths, map[string]struct{}{}, []string{}, []string{})
 	if err != nil {
 		t.Fatalf("Concatenation failed: %v", err)
 	}
@@ -79,8 +89,18 @@ func TestConcatenateFiles(t *testing.T) {
 		t.Fatalf("Failed to read output file: %v", err)
 	}
 
-	// Adjust expected content to use absolute paths and a single newline separator
-	expectedContent := fmt.Sprintf("// File: %s\n\nContent of file1\n// File: %s\n\nContent of file2\n", file1, file2)
+	// Compute relative paths for expected content
+	relFile1, err := filepath.Rel(initialWorkingDir, file1)
+	if err != nil {
+		relFile1 = file1
+	}
+	relFile2, err := filepath.Rel(initialWorkingDir, file2)
+	if err != nil {
+		relFile2 = file2
+	}
+
+	// Adjust expected content to use relative paths and a single newline separator
+	expectedContent := fmt.Sprintf("// File: %s\n\nContent of file1\n// File: %s\n\nContent of file2\n", relFile1, relFile2)
 	if string(data) != expectedContent {
 		t.Errorf("Expected concatenated content:\n%s\nGot:\n%s", expectedContent, string(data))
 	}
@@ -89,21 +109,51 @@ func TestConcatenateFiles(t *testing.T) {
 // TestProcessDirectory verifies processing of a single directory
 func TestProcessDirectory(t *testing.T) {
 	tempDir := t.TempDir()
+	originalWorkingDir := initialWorkingDir
+	initialWorkingDir = tempDir // Set initialWorkingDir to tempDir for consistency
+	defer func() {
+		initialWorkingDir = originalWorkingDir
+	}()
+
 	file := filepath.Join(tempDir, "file.txt")
-	os.WriteFile(file, []byte("Content"), 0644)
+	err := os.WriteFile(file, []byte("Content"), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write to file: %v", err)
+	}
 
 	outputFile := filepath.Join(tempDir, "output.txt")
 	excludedPaths := getExcludedPaths(outputFile, "")
 
 	var outputFileHandler *os.File
-	defer outputFileHandler.Close()
+	defer func() {
+		if outputFileHandler != nil {
+			outputFileHandler.Close()
+		}
+	}()
 
-	filesProcessed, err := processDirectory(tempDir, &outputFileHandler, outputFile, excludedPaths, nil, nil)
+	filesProcessed, err := processDirectory(tempDir, &outputFileHandler, outputFile, excludedPaths, map[string]struct{}{}, []string{}, []string{})
 	if err != nil {
 		t.Fatalf("Error processing directory: %v", err)
 	}
 	if !filesProcessed {
 		t.Error("Expected files to be processed")
+	}
+
+	// Verify the content of the output file
+	if outputFileHandler != nil {
+		data, err := os.ReadFile(outputFile)
+		if err != nil {
+			t.Fatalf("Failed to read output file: %v", err)
+		}
+
+		relFile, err := filepath.Rel(initialWorkingDir, file)
+		if err != nil {
+			relFile = file
+		}
+		expectedContent := fmt.Sprintf("// File: %s\n\nContent\n", relFile)
+		if string(data) != expectedContent {
+			t.Errorf("Expected output content:\n%s\nGot:\n%s", expectedContent, string(data))
+		}
 	}
 }
 
@@ -132,17 +182,28 @@ func TestShouldIncludeFile(t *testing.T) {
 // TestIsTextFile tests if a file is detected as a text file
 func TestIsTextFile(t *testing.T) {
 	tempDir := t.TempDir()
+	originalWorkingDir := initialWorkingDir
+	initialWorkingDir = tempDir // Set initialWorkingDir to tempDir for consistency
+	defer func() {
+		initialWorkingDir = originalWorkingDir
+	}()
 
 	// Text file
 	textFile := filepath.Join(tempDir, "text.txt")
-	os.WriteFile(textFile, []byte("This is a text file"), 0644)
+	err := os.WriteFile(textFile, []byte("This is a text file"), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write to text file: %v", err)
+	}
 	if !isTextFile(textFile) {
 		t.Error("Expected text file to be detected as text")
 	}
 
 	// Non-text file
 	binaryFile := filepath.Join(tempDir, "binary.bin")
-	os.WriteFile(binaryFile, []byte{0xFF, 0xD8, 0xFF}, 0644) // JPEG header
+	err = os.WriteFile(binaryFile, []byte{0xFF, 0xD8, 0xFF}, 0644) // JPEG header
+	if err != nil {
+		t.Fatalf("Failed to write to binary file: %v", err)
+	}
 	if isTextFile(binaryFile) {
 		t.Error("Expected binary file to be detected as non-text")
 	}
@@ -151,9 +212,18 @@ func TestIsTextFile(t *testing.T) {
 // TestWriteFileContent verifies the writing of a file's content
 func TestWriteFileContent(t *testing.T) {
 	tempDir := t.TempDir()
+	originalWorkingDir := initialWorkingDir
+	initialWorkingDir = tempDir // Set initialWorkingDir to tempDir for consistency
+	defer func() {
+		initialWorkingDir = originalWorkingDir
+	}()
+
 	file := filepath.Join(tempDir, "file.txt")
 	outputFile := filepath.Join(tempDir, "output.txt")
-	os.WriteFile(file, []byte("File content"), 0644)
+	err := os.WriteFile(file, []byte("File content"), 0644)
+	if err != nil {
+		t.Fatalf("Failed to write to file: %v", err)
+	}
 
 	output, err := os.Create(outputFile)
 	if err != nil {
