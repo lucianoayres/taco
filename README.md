@@ -208,7 +208,23 @@ This will build the executable and move it to `/usr/local/bin/`.
 
 ### Arguments 📝
 
-Taco offers several command-line arguments to customize its behavior. Below is a list of all available arguments along with their descriptions:
+Taco can be used with a list of directory paths to specify which directories to process. Additionally, several command-line options allow you to customize its behavior.
+
+#### Usage Example:
+
+```bash
+taco /path/to/dir1 /path/to/dir2
+```
+
+The above example will process files in `/path/to/dir1` and `/path/to/dir2` according to the specified options.
+
+#### Positional Arguments
+
+-   **Directory Paths**  
+    Specify one or more directories to process. Taco will concatenate files from each listed directory according to the specified options.  
+    **Example:** `/path/to/dir1 /path/to/dir2`
+
+#### Optional Arguments
 
 -   **`-output`**  
     Specifies the name of the output file where the concatenated content will be saved.  
