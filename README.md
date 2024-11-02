@@ -208,9 +208,9 @@ This will build the executable and move it to `/usr/local/bin/`.
 
 ### Arguments 📝
 
-Taco can be used with a list of directory paths to specify which directories to process. Additionally, several command-line options allow you to customize its behavior.
+Taco can be used with or without specifying directory paths, offering flexibility in how you select directories to process. When directory paths are provided, only those paths will be processed. Without specified paths, Taco will process all subdirectories in the current directory.
 
-#### Usage Example:
+#### Usage Examples:
 
 ```bash
 taco /path/to/dir1 /path/to/dir2
@@ -218,11 +218,16 @@ taco /path/to/dir1 /path/to/dir2
 
 The above example will process files in `/path/to/dir1` and `/path/to/dir2` according to the specified options.
 
+```bash
+taco
+```
+
+If no directories are specified, Taco will process all subdirectories in the current directory.
+
 #### Positional Arguments
 
 -   **Directory Paths**  
-    Specify one or more directories to process. Taco will concatenate files from each listed directory according to the specified options.
-
+    Specify one or more directories to process. Taco will concatenate files from each listed directory according to the specified options.  
     **Example:** `/path/to/dir1 /path/to/dir2`
 
 #### Optional Arguments
