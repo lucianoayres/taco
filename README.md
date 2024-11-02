@@ -284,7 +284,8 @@ Simplify Taco usage with these Makefile commands:
 -   [x] **Implement `-exclude-ext` feature** (Completed)
 -   [x] **Implement `-exclude-dir` feature** (Completed)
 -   [x] **Implement `-include-dir` feature** (Completed)
--   [ ] **Add regex-based exclusion**
+-   [ ] **Add regex-based filename exclusion**
+-   [ ] **Add regex-based filename inclusion**
 -   [ ] **Support for `.gitignore` files**
 -   [ ] **Enhanced error handling and logging**
 -   [ ] **Cross-platform binary releases**
