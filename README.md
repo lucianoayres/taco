@@ -206,48 +206,41 @@ sudo make install
 
 This will build the executable and move it to `/usr/local/bin/`.
 
-## Arguments 📝
+### Arguments 📝
 
-Taco offers several command-line arguments to customize its behavior. Below is a table listing all available arguments along with their descriptions:
+Taco offers several command-line arguments to customize its behavior. Below is a list of all available arguments along with their descriptions:
 
-<table>
-  <thead>
-    <tr>
-      <th style="width: 25%;">**Argument**</th>
-      <th style="width: 60%;">**Description**</th>
-      <th style="width: 15%;">**Default**</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code>-output</code></td>
-      <td>Specifies the name of the output file where the concatenated content will be saved.</td>
-      <td><code>taco.txt</code></td>
-    </tr>
-    <tr>
-      <td><code>-include-ext</code></td>
-      <td>Comma-separated list of file extensions to include (e.g., <code>.go,.md</code>).</td>
-      <td>_All text files_</td>
-    </tr>
-    <tr>
-      <td><code>-exclude-ext</code></td>
-      <td>Comma-separated list of file extensions to exclude (e.g., <code>.test,.spec.js</code>).</td>
-      <td>_None_</td>
-    </tr>
-    <tr>
-      <td><code>-exclude-dir</code></td>
-      <td>Comma-separated list of directories to exclude from processing (e.g., <code>vendor,tests</code>).</td>
-      <td>_None_</td>
-    </tr>
-  </tbody>
-</table>
+-   **`-output`**  
+    Specifies the name of the output file where the concatenated content will be saved.  
+    **Default:** `taco.txt`
 
-**Notes:**
+-   **`-include-ext`**  
+    Comma-separated list of file extensions to include (e.g., `.go,.md`).  
+    **Default:** All text files
 
--   **Case Insensitivity:** Both `-include-ext` and `-exclude-ext` are case-insensitive. For example, `.GO` is treated the same as `.go`.
--   **Whitespace Handling:** Whitespace around extensions and directory names is automatically trimmed.
--   **Precedence:** When both `-include-ext` and `-exclude-ext` are used, Taco first filters files based on the `-include-ext` list and then excludes any files that match the `-exclude-ext` list.
--   **Extension Format:** Extensions can be specified with or without a leading dot. Taco will automatically prepend a dot if it's missing.
+-   **`-exclude-ext`**  
+    Comma-separated list of file extensions to exclude (e.g., `.test,.spec.js`).  
+    **Default:** None
+
+-   **`-exclude-dir`**  
+    Comma-separated list of directories to exclude from processing (e.g., `vendor,tests`).  
+    **Default:** None
+
+---
+
+### Notes
+
+-   **Case Insensitivity**  
+    Both `-include-ext` and `-exclude-ext` are case-insensitive. For example, `.GO` is treated the same as `.go`.
+
+-   **Whitespace Handling**  
+    Whitespace around extensions and directory names is automatically trimmed.
+
+-   **Precedence**  
+    When both `-include-ext` and `-exclude-ext` are used, Taco first filters files based on the `-include-ext` list and then excludes any files that match the `-exclude-ext` list.
+
+-   **Extension Format**  
+    Extensions can be specified with or without a leading dot. Taco will automatically prepend a dot if it's missing.
 
 ## How to Use Taco 🌮
 
