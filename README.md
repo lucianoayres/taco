@@ -32,6 +32,7 @@
 -   📝 **Detailed Status Updates**: Displays progress and skips details.
 -   🔄 **Append Mode**: Adds to existing files without overwriting.
 -   ✨ **Customizable Output**: Set custom output names and locations.
+-   🎯 **Exclude Files by Pattern**: Exclude files matching specific patterns or regular expressions.
 
 ## Project Structure 📁
 
@@ -142,6 +143,10 @@ Use these optional flags to customize how Taco processes your files:
 
     -   Include specific directories for processing.
 
+-   **`-exclude-file-pattern`**
+
+    -   Exclude files matching specific patterns or regular expressions (e.g., `.*_test\.go$,^LICENSE$`).
+
 -   **`-verbose`**
 
     -   Enables verbose output for detailed status messages.
@@ -150,8 +155,9 @@ Use these optional flags to customize how Taco processes your files:
 
 ### Notes
 
--   **Precedence**: When both `-include-ext` and `-exclude-ext` are used, Taco first filters files by `-include-ext`, then excludes any files that match `-exclude-ext`. The same applies to `-exclude-dir` and `-exclude-dir`.
+-   **Precedence**: When both `-include-ext` and `-exclude-ext` are used, Taco first filters files by `-include-ext`, then excludes any files that match `-exclude-ext`. The same applies to `-include-dir` and `-exclude-dir`.
 -   **Extension Format**: Taco automatically prepends a dot if missing.
+-   **Pattern Matching**: The `-exclude-file-pattern` flag uses regular expressions for pattern matching. Ensure patterns are valid and properly escaped.
 
 ## How to Use Taco 🌮
 
@@ -199,15 +205,33 @@ Choose files by extension using these flags:
 
 > **Tip:** Taco first filters files by `-include-ext`, then removes those matching `-exclude-ext`, if both are specified.
 
+#### Excluding Files by Pattern
+
+Use the `-exclude-file-pattern` flag to exclude files matching specific patterns or regular expressions.
+
+-   **Exclude test files and backups**:
+
+    ```bash
+    taco -exclude-file-pattern=".*_test\.go$,.*\.bak$"
+    ```
+
+-   **Exclude specific files**:
+
+    ```bash
+    taco -exclude-file-pattern="^Makefile$,^LICENSE$"
+    ```
+
+> **Note:** Patterns are regular expressions. Ensure they are properly quoted and escaped.
+
 ### Combining Options
 
 Combine flags to refine file selection. For example:
 
 ```bash
-taco -output=my-taco.txt -include-dir=src,docs -exclude-dir=vendor,tests -include-ext=.go,.md -exclude-ext=.log,.tmp
+taco -output=my-taco.txt -include-dir=src,docs -exclude-dir=vendor,tests -include-ext=.go,.md -exclude-ext=.log,.tmp -exclude-file-pattern=".*_test\.go$,^Makefile$,^LICENSE$"
 ```
 
-This command combines `.go` and `.md` files from `src` and `docs`, excludes `vendor` and `tests`, and omits `.log` and `.tmp` files.
+This command combines `.go` and `.md` files from `src` and `docs`, excludes `vendor` and `tests`, omits `.log` and `.tmp` files, and excludes files matching the specified patterns.
 
 ## Pro Tips 💡
 
@@ -216,6 +240,7 @@ This command combines `.go` and `.md` files from `src` and `docs`, excludes `ven
 -   **Custom Output**: Set output file with `-output`.
 -   **Include/Exclude Specific Extensions**: Use `-include-ext` or `-exclude-ext`.
 -   **Exclude Directories**: Use `-exclude-dir` to omit directories.
+-   **Exclude Files by Pattern**: Use `-exclude-file-pattern` for fine-grained file exclusion.
 -   **Append Mode**: Appends new content to the existing output file if it already exists.
 -   **Detailed Status**: Verbose mode for skip reasons.
 
@@ -264,10 +289,16 @@ Simplify Taco usage with these Makefile commands:
     taco -exclude-ext=.test,.spec.js
     ```
 
+-   **Exclude Files Matching Patterns**:
+
+    ```bash
+    taco -exclude-file-pattern=".*_test\.go$,^Makefile$,^LICENSE$"
+    ```
+
 -   **Exclude Directories and Set Custom Output**:
 
     ```bash
-    taco -output=final.txt -exclude-dir=vendor,tests -include-dir=src,docs -include-ext=.py,.md -exclude-ext=.log,.tmp
+    taco -output=final.txt -exclude-dir=vendor,tests -include-dir=src,docs -include-ext=.py,.md -exclude-ext=.log,.tmp -exclude-file-pattern=".*_test\.py$"
     ```
 
 ## Limitations ⚠️
@@ -275,6 +306,7 @@ Simplify Taco usage with these Makefile commands:
 -   **Binary Files Excluded**: Binary files are automatically excluded.
 -   **Hidden Files Skipped**: Files/directories starting with a dot are skipped.
 -   **File Extension Detection**: Relies on extensions for inclusion/exclusion.
+-   **Pattern Matching**: Exclusion by pattern uses regular expressions, which require valid syntax.
 -   **Conflict Handling**: When using both inclusion and exclusion arguments, overlapping criteria may need careful management.
 
 ## Roadmap 🗺️
@@ -284,7 +316,7 @@ Simplify Taco usage with these Makefile commands:
 -   [x] **Implement `-exclude-ext` feature** (Completed)
 -   [x] **Implement `-exclude-dir` feature** (Completed)
 -   [x] **Implement `-include-dir` feature** (Completed)
--   [ ] **Add regex-based filename exclusion**
+-   [x] **Add regex-based filename exclusion (`-exclude-file-pattern`)** (Completed)
 -   [ ] **Add regex-based filename inclusion**
 -   [ ] **Support for `.gitignore` files**
 -   [ ] **Enhanced error handling and logging**

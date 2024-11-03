@@ -1,3 +1,5 @@
+// File: src/main.go
+
 package main
 
 import (
@@ -7,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 )
 
@@ -15,14 +18,15 @@ const bufferSize = 512 // Number of bytes to read for content detection
 var initialWorkingDir string
 
 // parseArguments handles the command-line arguments and returns the output filename, directories to process,
-// included extensions, excluded extensions, excluded directories, verbosity flag, and an error if any.
-func parseArguments() (string, []string, []string, []string, []string, bool, error) {
+// included extensions, excluded extensions, excluded patterns, excluded directories, verbosity flag, and an error if any.
+func parseArguments() (string, []string, []string, []string, []string, []string, bool, error) {
 	// Define command-line flags
 	outputFileName := flag.String("output", "taco.txt", "The output file where the content will be concatenated")
 	includeExt := flag.String("include-ext", "", "Comma-separated list of file extensions to include (e.g., .go,.md)")
 	excludeExt := flag.String("exclude-ext", "", "Comma-separated list of file extensions to exclude (e.g., .test,.spec.js)")
 	excludeDir := flag.String("exclude-dir", "", "Comma-separated list of directories to exclude (e.g., vendor,tests)")
 	includeDir := flag.String("include-dir", "", "Comma-separated list of directories to include (e.g., src,docs,images). If not provided, the current directory and all its subdirectories will be processed.")
+	excludeFilePattern := flag.String("exclude-file-pattern", "", "Comma-separated list of file patterns or regular expressions to exclude files")
 	verbose := flag.Bool("verbose", false, "Enable verbose output")
 	flag.Parse()
 
@@ -74,6 +78,18 @@ func parseArguments() (string, []string, []string, []string, []string, bool, err
 		}
 	}
 
+	// Parse the exclude file patterns
+	var excludePatterns []string
+	if *excludeFilePattern != "" {
+		splitPatterns := strings.Split(*excludeFilePattern, ",")
+		for _, pattern := range splitPatterns {
+			trimmedPattern := strings.TrimSpace(pattern)
+			if trimmedPattern != "" {
+				excludePatterns = append(excludePatterns, trimmedPattern)
+			}
+		}
+	}
+
 	// Parse the exclude directories
 	var excludedDirectories []string
 	if *excludeDir != "" {
@@ -86,7 +102,7 @@ func parseArguments() (string, []string, []string, []string, []string, bool, err
 		}
 	}
 
-	return *outputFileName, directories, includeExtensions, excludeExtensions, excludedDirectories, *verbose, nil
+	return *outputFileName, directories, includeExtensions, excludeExtensions, excludePatterns, excludedDirectories, *verbose, nil
 }
 
 // getExcludedPaths returns a map containing full paths to exclude (the script itself and the output file).
@@ -98,7 +114,7 @@ func getExcludedPaths(outputFilePath, scriptFilePath string) map[string]struct{}
 }
 
 // concatenateFiles processes the directories and writes the content of each text file to the output file.
-func concatenateFiles(outputFilePath string, directories []string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string, verbose bool) error {
+func concatenateFiles(outputFilePath string, directories []string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string, excludePatterns []*regexp.Regexp, verbose bool) error {
 	var anyFilesProcessed bool = false
 	var outputFile *os.File
 
@@ -133,7 +149,7 @@ func concatenateFiles(outputFilePath string, directories []string, excludedPaths
 			continue
 		}
 
-		filesProcessed, err := processDirectory(absDir, &outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts, verbose)
+		filesProcessed, err := processDirectory(absDir, &outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts, excludePatterns, verbose)
 		if err != nil {
 			return fmt.Errorf("error processing directory %s: %v", dir, err)
 		}
@@ -164,7 +180,7 @@ func concatenateFiles(outputFilePath string, directories []string, excludedPaths
 
 // processDirectory recursively reads files in the directory and its subdirectories.
 // It returns a bool indicating whether any text files were processed.
-func processDirectory(dir string, outputFile **os.File, outputFilePath string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string, verbose bool) (bool, error) {
+func processDirectory(dir string, outputFile **os.File, outputFilePath string, excludedPaths map[string]struct{}, excludedDirs map[string]struct{}, includeExts, excludeExts []string, excludePatterns []*regexp.Regexp, verbose bool) (bool, error) {
 	filesProcessed := false
 
 	entries, err := os.ReadDir(dir)
@@ -208,7 +224,7 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 			}
 
 			// Recursively process subdirectories
-			subdirProcessed, err := processDirectory(path, outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts, verbose)
+			subdirProcessed, err := processDirectory(path, outputFile, outputFilePath, excludedPaths, excludedDirs, includeExts, excludeExts, excludePatterns, verbose)
 			if err != nil {
 				return false, err
 			}
@@ -226,6 +242,14 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 			relativePath, err := filepath.Rel(initialWorkingDir, path)
 			if err != nil {
 				relativePath = path // Fallback to absolute path if cannot compute relative path
+			}
+
+			// Check if the file matches any of the exclude patterns
+			if matchesExcludePatterns(name, excludePatterns) {
+				if verbose {
+					fmt.Printf("Skipping file %s: matches exclude pattern\n", relativePath)
+				}
+				continue
 			}
 
 			// Check if the file should be included based on extensions
@@ -301,6 +325,16 @@ func processDirectory(dir string, outputFile **os.File, outputFilePath string, e
 	}
 
 	return true, nil
+}
+
+// matchesExcludePatterns checks if the filename matches any of the exclude patterns.
+func matchesExcludePatterns(filename string, excludePatterns []*regexp.Regexp) bool {
+	for _, re := range excludePatterns {
+		if re.MatchString(filename) {
+			return true
+		}
+	}
+	return false
 }
 
 // shouldIncludeFile determines if a file should be included based on the provided include and exclude extensions.
@@ -417,7 +451,7 @@ func run() error {
 	}
 
 	// Parse command-line arguments
-	outputFileName, directories, includeExts, excludeExts, excludeDirs, verbose, err := parseArguments()
+	outputFileName, directories, includeExts, excludeExts, excludePatterns, excludeDirs, verbose, err := parseArguments()
 	if err != nil {
 		return err
 	}
@@ -439,8 +473,18 @@ func run() error {
 		excludedDirsMap[normalizedDir] = struct{}{}
 	}
 
+	// Compile exclude patterns into regular expressions
+	var excludeRegexps []*regexp.Regexp
+	for _, pattern := range excludePatterns {
+		re, err := regexp.Compile(pattern)
+		if err != nil {
+			return fmt.Errorf("Invalid exclude-file-pattern %q: %v", pattern, err)
+		}
+		excludeRegexps = append(excludeRegexps, re)
+	}
+
 	// Concatenate files from the directories
-	if err := concatenateFiles(outputFilePath, directories, excludedPaths, excludedDirsMap, includeExts, excludeExts, verbose); err != nil {
+	if err := concatenateFiles(outputFilePath, directories, excludedPaths, excludedDirsMap, includeExts, excludeExts, excludeRegexps, verbose); err != nil {
 		return err
 	}
 	return nil
