@@ -42,6 +42,7 @@
 ├── Makefile     # Makefile to simplify commands
 ├── src          # Directory containing the source code
 │   └── main.go  # Main Go file
+│   └── main_test.go  # Main Go Test file
 ```
 
 ## Getting Started 🚀
