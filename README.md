@@ -32,7 +32,7 @@
 -   📝 **Detailed Status Updates**: Displays progress and skips details.
 -   🔄 **Append Mode**: Adds to existing files without overwriting.
 -   ✨ **Customizable Output**: Set custom output names and locations.
--   🎯 **Exclude Files by Pattern**: Exclude files matching specific patterns or regular expressions.
+-   🎯 **Include/Exclude Files by Pattern**: Include or exclude files matching specific patterns or regular expressions.
 
 ## Project Structure 📁
 
@@ -135,13 +135,17 @@ Use these optional flags to customize how Taco processes your files:
 
     -   Specify file extensions to exclude (e.g., `.test,.spec.js`).
 
+-   **`-include-dir`**
+
+    -   Include specific directories for processing.
+
 -   **`-exclude-dir`**
 
     -   Exclude root-level directories from processing.
 
--   **`-include-dir`**
+-   **`-include-file-pattern`**
 
-    -   Include specific directories for processing.
+    -   Include files matching specific patterns or regular expressions (e.g., `^main\.go$`).
 
 -   **`-exclude-file-pattern`**
 
@@ -156,8 +160,10 @@ Use these optional flags to customize how Taco processes your files:
 ### Notes
 
 -   **Precedence**: When both `-include-ext` and `-exclude-ext` are used, Taco first filters files by `-include-ext`, then excludes any files that match `-exclude-ext`. The same applies to `-include-dir` and `-exclude-dir`.
+
 -   **Extension Format**: Taco automatically prepends a dot if missing.
--   **Pattern Matching**: The `-exclude-file-pattern` flag uses regular expressions for pattern matching. Ensure patterns are valid and properly escaped.
+
+-   **Pattern Matching**: The `-include-file-pattern` and `-exclude-file-pattern` flags use regular expressions for pattern matching. Ensure patterns are valid and properly escaped.
 
 ## How to Use Taco 🌮
 
@@ -197,28 +203,28 @@ Choose files by extension using these flags:
     taco -include-ext=.go,.md
     ```
 
--   **Exclude certain file types**: Use `-exclude-ext` to omit specific extensions, like `.test` and `.spec.js`.
+-   **Exclude certain file types**: Use `-exclude-ext` to omit specific extensions, like `.log` and `.tmp`.
 
     ```bash
-    taco -exclude-ext=.test,.spec.js
+    taco -exclude-ext=.log,.tmp
     ```
 
 > **Tip:** Taco first filters files by `-include-ext`, then removes those matching `-exclude-ext`, if both are specified.
 
-#### Excluding Files by Pattern
+#### Including or Excluding Files by Pattern
 
-Use the `-exclude-file-pattern` flag to exclude files matching specific patterns or regular expressions.
+Use the `-include-file-pattern` and `-exclude-file-pattern` flags to include or exclude files matching specific patterns or regular expressions.
 
--   **Exclude test files and backups**:
+-   **Include files matching patterns**:
+
+    ```bash
+    taco -include-file-pattern="^main\.go$,^README\.md$"
+    ```
+
+-   **Exclude files matching patterns**:
 
     ```bash
     taco -exclude-file-pattern=".*_test\.go$,.*\.bak$"
-    ```
-
--   **Exclude specific files**:
-
-    ```bash
-    taco -exclude-file-pattern="^Makefile$,^LICENSE$"
     ```
 
 > **Note:** Patterns are regular expressions. Ensure they are properly quoted and escaped.
@@ -228,10 +234,10 @@ Use the `-exclude-file-pattern` flag to exclude files matching specific patterns
 Combine flags to refine file selection. For example:
 
 ```bash
-taco -output=my-taco.txt -include-dir=src,docs -exclude-dir=vendor,tests -include-ext=.go,.md -exclude-ext=.log,.tmp -exclude-file-pattern=".*_test\.go$,^Makefile$,^LICENSE$"
+taco -output=my-taco.txt -include-dir=src,docs -exclude-dir=vendor,tests -include-ext=.go,.md -exclude-ext=.log,.tmp -include-file-pattern="^main\.go$,^README\.md$" -exclude-file-pattern=".*_test\.go$,^Makefile$,^LICENSE$"
 ```
 
-This command combines `.go` and `.md` files from `src` and `docs`, excludes `vendor` and `tests`, omits `.log` and `.tmp` files, and excludes files matching the specified patterns.
+This command combines `.go` and `.md` files from `src` and `docs`, excludes `vendor` and `tests`, includes files matching `^main\.go$` and `^README\.md$`, excludes `.log` and `.tmp` files, and excludes files matching the specified patterns.
 
 ## Pro Tips 💡
 
@@ -240,7 +246,7 @@ This command combines `.go` and `.md` files from `src` and `docs`, excludes `ven
 -   **Custom Output**: Set output file with `-output`.
 -   **Include/Exclude Specific Extensions**: Use `-include-ext` or `-exclude-ext`.
 -   **Exclude Directories**: Use `-exclude-dir` to omit directories.
--   **Exclude Files by Pattern**: Use `-exclude-file-pattern` for fine-grained file exclusion.
+-   **Include/Exclude Files by Pattern**: Use `-include-file-pattern` and `-exclude-file-pattern` for fine-grained file selection.
 -   **Append Mode**: Appends new content to the existing output file if it already exists.
 -   **Detailed Status**: Verbose mode for skip reasons.
 
@@ -289,6 +295,12 @@ Simplify Taco usage with these Makefile commands:
     taco -exclude-ext=.test,.spec.js
     ```
 
+-   **Include Files Matching Patterns**:
+
+    ```bash
+    taco -include-file-pattern="^main\.go$,^README\.md$"
+    ```
+
 -   **Exclude Files Matching Patterns**:
 
     ```bash
@@ -298,7 +310,7 @@ Simplify Taco usage with these Makefile commands:
 -   **Exclude Directories and Set Custom Output**:
 
     ```bash
-    taco -output=final.txt -exclude-dir=vendor,tests -include-dir=src,docs -include-ext=.py,.md -exclude-ext=.log,.tmp -exclude-file-pattern=".*_test\.py$"
+    taco -output=final.txt -exclude-dir=vendor,tests -include-dir=src,docs -include-ext=.py,.md -exclude-ext=.log,.tmp -include-file-pattern="^app\.py$" -exclude-file-pattern=".*_test\.py$"
     ```
 
 ## Limitations ⚠️
@@ -306,7 +318,7 @@ Simplify Taco usage with these Makefile commands:
 -   **Binary Files Excluded**: Binary files are automatically excluded.
 -   **Hidden Files Skipped**: Files/directories starting with a dot are skipped.
 -   **File Extension Detection**: Relies on extensions for inclusion/exclusion.
--   **Pattern Matching**: Exclusion by pattern uses regular expressions, which require valid syntax.
+-   **Pattern Matching**: Inclusion and exclusion by pattern use regular expressions, which require valid syntax.
 -   **Conflict Handling**: When using both inclusion and exclusion arguments, overlapping criteria may need careful management.
 
 ## Roadmap 🗺️
@@ -317,10 +329,9 @@ Simplify Taco usage with these Makefile commands:
 -   [x] **Implement `-exclude-dir` feature** (Completed)
 -   [x] **Implement `-include-dir` feature** (Completed)
 -   [x] **Add regex-based filename exclusion (`-exclude-file-pattern`)** (Completed)
--   [ ] **Add regex-based filename inclusion**
+-   [x] **Add regex-based filename inclusion (`-include-file-pattern`)** (Completed)
 -   [ ] **Support for `.gitignore` files**
 -   [ ] **Enhanced error handling and logging**
--   [ ] **Cross-platform binary releases**
 
 ## Contributions 🍽️
 
