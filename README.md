@@ -38,10 +38,10 @@
 
 ```
 /taco
-├── go.mod       # Go module file
-├── Makefile     # Makefile to simplify commands
-├── src          # Directory containing the source code
-│   └── main.go  # Main Go file
+├── go.mod            # Go module file
+├── Makefile          # Makefile to simplify commands
+├── src               # Directory containing the source code
+│   └── main.go       # Main Go file
 │   └── main_test.go  # Main Go Test file
 ```
 
