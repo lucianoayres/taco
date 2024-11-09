@@ -2,7 +2,7 @@
 
 ![Taco Banner](https://github.com/lucianoayres/taco/blob/main/images/banner_taco.png?raw=true)
 
-## Roll up all your codebase into one simple text file!
+## Transform Your Entire Codebase into a Single, Simple Text File!
 
 [What's Taco? 🌮](#whats-taco-) · [In Action 🌶️](#in-action-) · [Why Taco? 🤔](#why-taco-) · [Features ✨](#features-) · [Project Structure 📁](#project-structure-) · [Getting Started 🚀](#getting-started-) · [Arguments 📝](#arguments-) · [How to Use Taco 🌮](#how-to-use-taco-) · [Pro Tips 💡](#pro-tips-) · [Makefile Commands 🛠️](#makefile-commands-) · [Examples 📚](#examples-) · [Limitations ⚠️](#limitations-) · [Roadmap 🗺️](#roadmap-) · [Contributions 🍽️](#contributions-) · [License 📄](#license-)
 
